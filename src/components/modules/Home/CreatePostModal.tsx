@@ -12,13 +12,15 @@ import { WriteLogo } from "../../icons";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import { Input } from "@nextui-org/input";
+import { Input, Textarea } from "@nextui-org/input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { uploadImage } from "@/src/utils/uploadImage";
 import { useCreatePost } from "@/src/hooks/post.hook";
 import { useUser } from "@/src/context/user.provider";
 import { Select, SelectItem } from "@nextui-org/select";
-import { categoryField, statusField } from "@/src/constant";
+import { categoryField } from "@/src/constant";
+import { Checkbox } from "@nextui-org/checkbox";
+import Loading from "../../UI/Loading";
 
 const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -28,7 +30,7 @@ export default function CreatePostModal() {
   const [content, setContent] = useState("");
   const { user } = useUser();
 
-  const { mutate: createPost } = useCreatePost();
+  const { mutate: createPost, isPending } = useCreatePost();
 
   const quillModules = {
     toolbar: [
@@ -103,14 +105,13 @@ export default function CreatePostModal() {
   };
 
   const handleCreatePost: SubmitHandler<FieldValues> = async (data) => {
-    const imageUrl = await uploadImage(data.image[0]);
+    const imageUrl = await uploadImage(data.images[0]);
 
     const postData = {
       ...data,
       description: content,
-      image: imageUrl.data.url,
+      images: imageUrl?.data.url,
       author: user?._id,
-      authorImage: user?.profilePicture,
     };
     const res = await createPost(postData);
     console.log(res);
@@ -118,6 +119,7 @@ export default function CreatePostModal() {
 
   return (
     <>
+      {isPending && <Loading />}
       <Button
         startContent={<WriteLogo />}
         onPress={onOpen}
@@ -131,7 +133,7 @@ export default function CreatePostModal() {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         placement="top-center"
-        scrollBehavior="inside"
+        scrollBehavior="normal"
       >
         <ModalContent>
           {(onClose) => (
@@ -149,6 +151,13 @@ export default function CreatePostModal() {
                       className="w-full mb-2"
                       {...register("title")}
                     />
+                    <Textarea
+                      isRequired
+                      {...register("shortDescription")}
+                      label="Short Description"
+                      placeholder="Enter your description"
+                      className="w-full mb-2"
+                    />
 
                     <div className="flex gap-5">
                       <Select
@@ -161,23 +170,13 @@ export default function CreatePostModal() {
                           <SelectItem key={item.key}>{item.label}</SelectItem>
                         ))}
                       </Select>
-                      <Select
-                        label="Post Status"
-                        placeholder="Select Post Status"
-                        className=""
-                        {...register("status")}
-                      >
-                        {statusField.map((item) => (
-                          <SelectItem key={item.key}>{item.label}</SelectItem>
-                        ))}
-                      </Select>
                     </div>
                     <label htmlFor="image">Upload Image</label>
                     <input
                       className="block mb-2"
                       type="file"
                       id="image"
-                      {...register("image")}
+                      {...register("images")}
                     />
 
                     <div className="h-full">
@@ -191,6 +190,9 @@ export default function CreatePostModal() {
                       />
                     </div>
                   </div>
+                  <Checkbox {...register("isPremium")} size="md">
+                    Post as Premium Content
+                  </Checkbox>
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="flat" onPress={onClose}>

@@ -17,7 +17,6 @@ export interface IUser {
   _id: string;
   role: string;
   name: string;
-  status: string;
   profilePicture: string;
   email: string;
   createdAt: string;
@@ -25,15 +24,52 @@ export interface IUser {
 }
 export interface IPost {
   _id: string;
+  author: Author;
   title: string;
+  shortDescription: string;
   description: string;
-  author: string;
-  authorImage: string;
-  image: string;
+  images: string[];
   category: string;
-  status: string;
-  isDeleted: boolean;
+  topics: string[];
+  vote: IVote[];
+  shares: number;
+  isPremium: boolean;
+  comments: IComment[];
   createdAt: string;
   updatedAt: string;
-  __v: number;
 }
+export interface IVote {
+  _id: string;
+  name: string;
+  email: string;
+  username: string;
+  isPremiumMember: boolean;
+}
+
+export interface IComment {
+  _id: string;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+    username: string;
+    isEmailVerified: boolean;
+    isPremiumMember: boolean;
+    profileImg: string;
+  };
+  content: string;
+  claps: IVote[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Author {
+  _id: string;
+  name: string;
+  email: string;
+  username: string;
+  isPremiumMember: boolean;
+  profileImg: string;
+}
+
+export interface IArticleResponse {}
