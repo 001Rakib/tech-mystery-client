@@ -8,7 +8,7 @@ const Posts = async () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="grid grid-cols-3 gap-5">
-        {posts.map((post: IPost) => (
+        {posts?.map((post: IPost) => (
           <PostCard key={post._id} post={post} />
         ))}
       </div>

@@ -109,7 +109,7 @@ export default function CreatePostModal() {
       ...data,
       description: content,
       image: imageUrl.data.url,
-      author: user?.name,
+      author: user?._id,
       authorImage: user?.profilePicture,
     };
     const res = await createPost(postData);
@@ -127,7 +127,7 @@ export default function CreatePostModal() {
         Create Post
       </Button>
       <Modal
-        size="full"
+        size="lg"
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         placement="top-center"
