@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FieldValues } from "react-hook-form";
-import { createPost, getPosts } from "../services/Posts";
+import { createPost } from "../services/Posts";
 import { toast } from "sonner";
 
 export const useCreatePost = () => {
@@ -15,9 +15,3 @@ export const useCreatePost = () => {
     },
   });
 };
-// export const useGetPosts = () => {
-//   return useQuery({
-//     queryKey: ["GET_POSTS"],
-//     queryFn: async () => await getPosts(),
-//   });
-// };

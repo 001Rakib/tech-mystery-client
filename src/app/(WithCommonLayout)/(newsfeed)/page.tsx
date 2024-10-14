@@ -4,7 +4,7 @@ import { IPost } from "@/src/types";
 
 const NewsFeed = async () => {
   const { data: posts } = await getPosts();
-  console.log(posts);
+
   return (
     <div className="mx-auto max-w-7xl px-6 my-10">
       <div className="max-w-7xl mx-auto grid grid-cols-3 gap-4">
