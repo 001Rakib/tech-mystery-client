@@ -14,10 +14,6 @@ export const createPost = async (postData: FieldValues) => {
 export const getSinglePost = async (postId: string) => {
   let fetchOptions = {};
 
-  fetchOptions = {
-    cache: "no-store",
-  };
-
   const res = await fetch(
     `http://localhost:5000/api/posts/${postId}`,
     fetchOptions

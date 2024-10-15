@@ -7,6 +7,7 @@ import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import Link from "next/link";
 import { useState } from "react";
+import { Chip } from "@nextui-org/chip";
 
 const PostCard = ({ post }: { post: IPost }) => {
   const [isFollowed, setIsFollowed] = useState(false);
@@ -16,7 +17,7 @@ const PostCard = ({ post }: { post: IPost }) => {
   return (
     <Link href={`/${post._id}`}>
       <div>
-        <Card className="h-full">
+        <Card className="h-full py-3">
           <CardHeader className="justify-between">
             <div className="flex gap-5">
               <Avatar
@@ -29,9 +30,6 @@ const PostCard = ({ post }: { post: IPost }) => {
                 <h4 className="text-small font-semibold leading-none text-default-600">
                   {post.author.name}
                 </h4>
-                <h5 className="text-small tracking-tight text-default-400">
-                  Category: {post.category}
-                </h5>
               </div>
             </div>
 
@@ -55,22 +53,27 @@ const PostCard = ({ post }: { post: IPost }) => {
             )}
           </CardHeader>
           <CardBody className="px-3 py-0">
-            <h1 className="text-3xl font-bold">{post.title}</h1>
-            {/* <div
-            className="post-content"
-            dangerouslySetInnerHTML={{ __html: post.description }}
-          /> */}
-            <p className="text-default-500 text-sm">{post.shortDescription}</p>
+            <div>
+              <div>
+                {post.images.map((image) => (
+                  <Image
+                    key={image}
+                    alt="Card background"
+                    className="object-cover rounded-xl  mb-4 h-full w-full"
+                    src={image}
+                  />
+                ))}
+              </div>
 
-            {post.images.map((image) => (
-              <Image
-                key={image}
-                alt="Card background"
-                className="object-cover rounded-xl mt-4 mb-6"
-                src={image}
-                width={270}
-              />
-            ))}
+              <div>
+                <h1 className="text-3xl font-bold">{post.title}</h1>
+
+                <p className="text-default-500 text-sm">
+                  {post.shortDescription}
+                </p>
+                <Chip variant="bordered"> {post.category} </Chip>
+              </div>
+            </div>
           </CardBody>
         </Card>
       </div>

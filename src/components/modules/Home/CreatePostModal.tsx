@@ -134,6 +134,7 @@ export default function CreatePostModal() {
         onOpenChange={onOpenChange}
         placement="top-center"
         scrollBehavior="normal"
+        backdrop="blur"
       >
         <ModalContent>
           {(onClose) => (

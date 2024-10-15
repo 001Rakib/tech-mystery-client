@@ -31,7 +31,8 @@ export interface IPost {
   images: string[];
   category: string;
   topics: string[];
-  vote: IVote[];
+  upVote: IVote[];
+  downVote: IVote[];
   shares: number;
   isPremium: boolean;
   comments: IComment[];

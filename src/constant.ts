@@ -17,8 +17,8 @@ export const statusField = [
 ];
 export const categoryField = [
   {
-    key: "web",
-    label: "Web",
+    key: "web-development",
+    label: "Web Development",
   },
   {
     key: "software",
