@@ -14,6 +14,7 @@ export const registerUser = async (userData: FieldValues) => {
     }
     return data;
   } catch (err: any) {
+    console.log(err);
     throw new Error(err);
   }
 };

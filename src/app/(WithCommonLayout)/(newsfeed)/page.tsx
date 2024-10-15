@@ -9,9 +9,11 @@ const NewsFeed = async () => {
     <div className="mx-auto max-w-7xl px-6 my-10">
       <div className="max-w-7xl mx-auto grid grid-cols-3 gap-4">
         <div className="col-span-2">
-          {posts?.map((post: IPost) => (
-            <PostCard key={post._id} post={post} />
-          ))}
+          <div className="grid gap-5">
+            {posts?.map((post: IPost) => (
+              <PostCard key={post._id} post={post} />
+            ))}
+          </div>
         </div>
         <div className="ml-4">
           <h1 className="font-semibold text-xl">Users You Can Follow</h1>

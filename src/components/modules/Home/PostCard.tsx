@@ -16,8 +16,8 @@ const PostCard = ({ post }: { post: IPost }) => {
 
   return (
     <Link href={`/${post._id}`}>
-      <div>
-        <Card className="h-full py-3">
+      <div className="">
+        <Card className="h-full pb-3">
           <CardHeader className="justify-between">
             <div className="flex gap-5">
               <Avatar
