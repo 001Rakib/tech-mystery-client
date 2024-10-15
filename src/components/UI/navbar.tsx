@@ -18,9 +18,10 @@ import Link from "next/link";
 import { useUser } from "@/src/context/user.provider";
 import NavbarAvatar from "./NavbarAvatar";
 import CreatePostModal from "../modules/Home/CreatePostModal";
+import { Spinner } from "@nextui-org/spinner";
 
 export const Navbar = () => {
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -66,7 +67,7 @@ export const Navbar = () => {
           <NavbarItem className="hidden md:flex">
             <Link href={"/login"}>
               {" "}
-              <Button>Login</Button>
+              {isLoading ? <Spinner size="sm" /> : <Button>Login</Button>}
             </Link>
           </NavbarItem>
         )}

@@ -12,11 +12,15 @@ import { Avatar } from "@nextui-org/avatar";
 import { logout } from "@/src/services/AuthService";
 import { useUser } from "@/src/context/user.provider";
 import { protectedRoutes } from "@/src/constant";
+import { getUser } from "@/src/hooks/user.hook";
+import { Spinner } from "@nextui-org/spinner";
 
 export default function NavbarAvatar() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, setIsLoading: userLoading } = useUser();
+
+  const { data, isLoading } = getUser(user?.email as string);
 
   const handleLogout = () => {
     logout();
@@ -34,7 +38,11 @@ export default function NavbarAvatar() {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Avatar className="cursor-pointer" src={user?.profilePicture} />
+        {isLoading ? (
+          <Spinner size="sm" />
+        ) : (
+          <Avatar className="cursor-pointer" src={data?.data?.profileImg} />
+        )}
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions">
         <DropdownItem onClick={() => handleNavigation("/profile")}>
