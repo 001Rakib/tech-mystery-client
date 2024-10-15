@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useUser } from "../context/user.provider";
 import axios from "axios";
 
-export const getUser = (email: string) => {
+export const useGetUser = (email: string) => {
   return useQuery({
     queryKey: ["USER", email],
     queryFn: async () => {

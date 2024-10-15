@@ -12,7 +12,7 @@ import { Avatar } from "@nextui-org/avatar";
 import { logout } from "@/src/services/AuthService";
 import { useUser } from "@/src/context/user.provider";
 import { protectedRoutes } from "@/src/constant";
-import { getUser } from "@/src/hooks/user.hook";
+import { useGetUser } from "@/src/hooks/user.hook";
 import { Spinner } from "@nextui-org/spinner";
 
 export default function NavbarAvatar() {
@@ -20,7 +20,7 @@ export default function NavbarAvatar() {
   const pathname = usePathname();
   const { user, setIsLoading: userLoading } = useUser();
 
-  const { data, isLoading } = getUser(user?.email as string);
+  const { data, isLoading } = useGetUser(user?.email as string);
 
   const handleLogout = () => {
     logout();

@@ -22,6 +22,7 @@ const ProfileEditModal = ({ user }: { user: IUser }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
+  const [imageUrl, setImageUrl] = useState<string>(user?.profilePicture);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0];
@@ -40,12 +41,16 @@ const ProfileEditModal = ({ user }: { user: IUser }) => {
   };
 
   const handleUpdateUser: SubmitHandler<FieldValues> = async (data) => {
-    const imageUrl = await uploadImage(imageFiles[0]);
+    if (imageFiles.length) {
+      const uploadImg = await uploadImage(imageFiles[0]);
+      setImageUrl(uploadImg?.data.url);
+    }
 
     const updateData = {
       name: data.name,
-      profileImg: imageUrl?.data.url,
+      profileImg: imageUrl,
     };
+    // console.log(updateData);
     updateUser(updateData);
   };
 

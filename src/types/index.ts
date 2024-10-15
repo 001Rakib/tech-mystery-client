@@ -10,6 +10,7 @@ export interface ILoggedInUser {
   email: string;
   status: string;
   profilePicture: string;
+  isPremiumMember: boolean;
   iat: number;
   exp: number;
 }
@@ -19,6 +20,7 @@ export interface IUser {
   name: string;
   profilePicture: string;
   email: string;
+  isPremiumMember: boolean;
   createdAt: string;
   updatedAt: string;
 }
