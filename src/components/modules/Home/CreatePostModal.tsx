@@ -21,6 +21,7 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { categoryField } from "@/src/constant";
 import { Checkbox } from "@nextui-org/checkbox";
 import Loading from "../../UI/Loading";
+import { useRouter } from "next/navigation";
 
 const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -29,7 +30,7 @@ export default function CreatePostModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [content, setContent] = useState("");
   const { user } = useUser();
-
+  const router = useRouter();
   const { mutate: createPost, isPending } = useCreatePost();
 
   const quillModules = {
@@ -114,7 +115,6 @@ export default function CreatePostModal() {
       author: user?._id,
     };
     const res = await createPost(postData);
-    console.log(res);
   };
 
   return (
@@ -128,6 +128,7 @@ export default function CreatePostModal() {
       >
         Create Post
       </Button>
+
       <Modal
         size="lg"
         isOpen={isOpen}

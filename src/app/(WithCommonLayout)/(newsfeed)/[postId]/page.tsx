@@ -67,7 +67,8 @@ const PostDetailsPage = async ({ params: { postId } }: IProps) => {
           </Button>
           <Button>
             {" "}
-            <CommentLogo /> Add a Comment
+            <CommentLogo />
+            Comment
           </Button>
           <Button>
             {" "}

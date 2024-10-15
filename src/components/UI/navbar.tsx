@@ -55,7 +55,7 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          <CreatePostModal />
+          {user ? <CreatePostModal /> : "Login to Create Post"}
         </NavbarItem>
 
         {user?.email ? (
