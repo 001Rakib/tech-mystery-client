@@ -1,6 +1,5 @@
 "use server";
 import axiosInstance from "@/src/lib/Axios";
-import { TFollowPayload } from "@/src/types";
 import { revalidateTag } from "next/cache";
 import { FieldValues } from "react-hook-form";
 

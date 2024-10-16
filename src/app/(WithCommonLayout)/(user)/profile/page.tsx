@@ -1,5 +1,7 @@
 "use client";
 import { VerifiedLogo } from "@/src/components/icons";
+import MyFollowers from "@/src/components/modules/Profile/MyFollowers";
+import MyFollowing from "@/src/components/modules/Profile/MyFollowing";
 import MyPost from "@/src/components/modules/Profile/MyPost";
 import ProfileEditModal from "@/src/components/modules/Profile/ProfileEditModal";
 import Loading from "@/src/components/UI/Loading";
@@ -13,7 +15,7 @@ import { Tab, Tabs } from "@nextui-org/tabs";
 const Profile = () => {
   const { user } = useUser();
   const { data, isLoading } = useGetUser(user?.email as string);
-
+  // console.log(data?.data?.following);
   let tabs =
     user?.role === "admin"
       ? [
@@ -31,8 +33,7 @@ const Profile = () => {
           {
             id: "following",
             label: "Following",
-            content:
-              "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            content: <MyFollowing payload={data?.data?.following} />,
           },
           {
             id: "followers",
@@ -64,14 +65,12 @@ const Profile = () => {
           {
             id: "following",
             label: "Following",
-            content:
-              "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            content: <MyFollowing payload={data?.data?.following} />,
           },
           {
             id: "followers",
             label: "Followers",
-            content:
-              "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            content: <MyFollowers payload={data?.data?.followers} />,
           },
         ];
 
