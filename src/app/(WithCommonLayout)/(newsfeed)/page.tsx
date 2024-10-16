@@ -1,3 +1,4 @@
+import FollowUserList from "@/src/components/modules/Home/FollowUserList";
 import PostCard from "@/src/components/modules/Home/PostCard";
 import { getPosts } from "@/src/services/Posts";
 import { IPost } from "@/src/types";
@@ -17,6 +18,7 @@ const NewsFeed = async () => {
         </div>
         <div className="ml-4">
           <h1 className="font-semibold text-xl">Users You Can Follow</h1>
+          <FollowUserList />
         </div>
       </div>
     </div>

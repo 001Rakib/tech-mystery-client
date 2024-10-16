@@ -18,7 +18,6 @@ interface IProps {
 const PostDetailsPage = async ({ params: { postId } }: IProps) => {
   const { data } = await getSinglePost(postId);
 
-  console.log(data);
   return (
     <div className="max-w-7xl mx-auto px-6 my-5">
       <div className="flex gap-5">
@@ -35,7 +34,10 @@ const PostDetailsPage = async ({ params: { postId } }: IProps) => {
         </div>
       </div>
       <div>
-        <h1 className="font-bold text-4xl my-2"> {data?.title} </h1>
+        <h1 className="font-bold text-4xl my-2 text-justify">
+          {" "}
+          {data?.title}{" "}
+        </h1>
         <p> {data?.shortDescription} </p>
       </div>
       <div className="my-2">

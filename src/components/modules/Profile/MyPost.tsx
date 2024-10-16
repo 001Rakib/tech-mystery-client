@@ -17,9 +17,15 @@ const MyPost = () => {
       <div className="">
         <div className="">
           <div className="grid gap-5">
-            {data?.map((post: IPost) => (
-              <PostCard key={post._id} post={post} />
-            ))}
+            {data?.length ? (
+              data?.map((post: IPost) => (
+                <PostCard key={post._id} post={post} />
+              ))
+            ) : (
+              <div className="grid justify-center items-center my-10">
+                <h1>You have not posted anything yet</h1>
+              </div>
+            )}
           </div>
         </div>
       </div>

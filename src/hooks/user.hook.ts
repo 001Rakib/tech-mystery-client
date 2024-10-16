@@ -16,6 +16,26 @@ export const useGetUser = (email: string) => {
     },
   });
 };
+export const useGetAllUser = () => {
+  return useQuery({
+    queryKey: ["USER"],
+    queryFn: async () => {
+      const response = await axios.get(`http://localhost:5000/api/auth/user`);
+      return response.data; // Return the data from the response
+    },
+  });
+};
+export const useGetUserToFollow = (id: string) => {
+  return useQuery({
+    queryKey: ["FOLLOW"],
+    queryFn: async () => {
+      const response = await axios.get(
+        `http://localhost:5000/api/follow?id=${id}`
+      );
+      return response.data; // Return the data from the response
+    },
+  });
+};
 
 export const useUpdateUser = () => {
   const { user } = useUser();
