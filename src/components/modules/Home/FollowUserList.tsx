@@ -1,17 +1,25 @@
 "use client";
 import { useUser } from "@/src/context/user.provider";
-import { useGetUserToFollow } from "@/src/hooks/user.hook";
+import { useFollowUser, useGetUserToFollow } from "@/src/hooks/user.hook";
 import { IUserResponse } from "@/src/types";
 import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
 import Loading from "../../UI/Loading";
-import { useState } from "react";
+import { VerifiedLogo } from "../../icons";
 
 const FollowUserList = () => {
-  const [isFollowed, setIsFollowed] = useState(false);
   const { user: currentUser } = useUser();
   const { data, isLoading } = useGetUserToFollow(currentUser?._id as string);
-  console.log(data);
+  const { mutate: followUser, isPending } = useFollowUser();
+
+  const handleFollow = (id: string) => {
+    const followData = {
+      follower: currentUser?._id,
+      following: id,
+    };
+    const res = followUser(followData);
+    console.log(res);
+  };
 
   return (
     <>
@@ -21,22 +29,19 @@ const FollowUserList = () => {
           <div className="flex gap-5">
             <Avatar radius="full" size="lg" src={user?.profileImg} />
             <div className="flex flex-col gap-1 items-start justify-center">
-              <h4 className="text-xl font-semibold leading-none text-default-900">
+              <h4 className="text-xl font-semibold leading-none text-default-900 flex gap-1">
                 {user?.name}
+                {user?.isPremiumMember && <VerifiedLogo />}
               </h4>
               <Button
-                className={
-                  isFollowed
-                    ? "bg-transparent text-foreground border-default-200"
-                    : ""
-                }
+                onClick={() => handleFollow(user._id)}
+                className=""
+                isLoading={isPending}
                 color="primary"
                 radius="full"
                 size="sm"
-                variant={isFollowed ? "bordered" : "solid"}
-                onPress={() => setIsFollowed(!isFollowed)}
               >
-                {isFollowed ? "Unfollow" : "Follow"}
+                Follow
               </Button>
             </div>
           </div>

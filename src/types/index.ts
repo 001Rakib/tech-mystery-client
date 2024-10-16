@@ -102,5 +102,9 @@ export interface IUserResponse extends Document {
   createdAt?: Date;
   updatedAt?: Date;
 }
+export type TFollowPayload = {
+  follower: string;
+  following: string;
+};
 
 export interface IArticleResponse {}

@@ -1,11 +1,12 @@
 "use server";
-import envConfig from "@/src/config/envConfig";
 import axiosInstance from "@/src/lib/Axios";
+import { revalidateTag } from "next/cache";
 import { FieldValues } from "react-hook-form";
 
 export const createPost = async (postData: FieldValues) => {
   try {
     const { data } = await axiosInstance.post("/posts", postData);
+    revalidateTag("POSTS");
     return data;
   } catch (err: any) {
     throw new Error(err);

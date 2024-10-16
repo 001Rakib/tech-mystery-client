@@ -4,6 +4,7 @@ import {
   PdfLogo,
   ShareLogo,
   UpLogo,
+  VerifiedLogo,
 } from "@/src/components/icons";
 import { getSinglePost } from "@/src/services/Posts";
 import { Avatar } from "@nextui-org/avatar";
@@ -28,17 +29,15 @@ const PostDetailsPage = async ({ params: { postId } }: IProps) => {
           src={data?.author?.profileImg}
         />
         <div className="flex flex-col gap-1 items-start justify-center">
-          <h4 className="text-small font-semibold leading-none text-default-600">
+          <h4 className="text-small font-semibold leading-none text-default-600 flex gap-1">
             {data?.author.name}
+            {data?.author.isPremiumMember && <VerifiedLogo />}
           </h4>
         </div>
       </div>
       <div>
-        <h1 className="font-bold text-4xl my-2 text-justify">
-          {" "}
-          {data?.title}{" "}
-        </h1>
-        <p> {data?.shortDescription} </p>
+        <h1 className="font-bold text-4xl my-2"> {data?.title} </h1>
+        <p className="text-justify"> {data?.shortDescription} </p>
       </div>
       <div className="my-2">
         {data?.images.map((image: string) => (

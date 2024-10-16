@@ -43,7 +43,7 @@ const ProfileEditModal = ({ user }: { user: IUser }) => {
   const handleUpdateUser: SubmitHandler<FieldValues> = async (data) => {
     if (imageFiles.length) {
       const uploadImg = await uploadImage(imageFiles[0]);
-      setImageUrl(uploadImg?.data.url);
+      setImageUrl(uploadImg.data.url);
     }
 
     const updateData = {
