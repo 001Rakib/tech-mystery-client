@@ -1,11 +1,11 @@
 import {
   CommentLogo,
-  DownLogo,
   PdfLogo,
   ShareLogo,
-  UpLogo,
   VerifiedLogo,
 } from "@/src/components/icons";
+import DownVote from "@/src/components/modules/DownVote";
+import UpVote from "@/src/components/modules/UpVote";
 import { getSinglePost } from "@/src/services/Posts";
 import { Avatar } from "@nextui-org/avatar";
 import { Button, ButtonGroup } from "@nextui-org/button";
@@ -56,16 +56,9 @@ const PostDetailsPage = async ({ params: { postId } }: IProps) => {
 
       <div>
         <ButtonGroup>
-          <Button>
-            {" "}
-            <UpLogo />
-            {data?.upVote?.length} votes
-          </Button>
-          <Button>
-            {" "}
-            <DownLogo />
-            {data?.downVote?.length} votes
-          </Button>
+          <UpVote data={data} />
+          <DownVote data={data} />
+
           <Button>
             {" "}
             <CommentLogo />

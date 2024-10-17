@@ -30,7 +30,6 @@ export default function CreatePostModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [content, setContent] = useState("");
   const { user } = useUser();
-  const router = useRouter();
   const { mutate: createPost, isPending } = useCreatePost();
 
   const quillModules = {
@@ -192,8 +191,12 @@ export default function CreatePostModal() {
                       />
                     </div>
                   </div>
-                  <Checkbox {...register("isPremium")} size="md">
-                    Post as Premium Content
+                  <Checkbox
+                    isDisabled={!user?.isPremiumMember}
+                    {...register("isPremium")}
+                    size="md"
+                  >
+                    Post as Premium Content (only for Premium Member)
                   </Checkbox>
                 </ModalBody>
                 <ModalFooter>
