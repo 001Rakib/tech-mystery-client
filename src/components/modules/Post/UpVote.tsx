@@ -1,44 +1,45 @@
 "use client";
-import { useDownVotePost } from "@/src/hooks/post.hook";
+import { useUpVotePost } from "@/src/hooks/post.hook";
 import { Button } from "@nextui-org/button";
-import { DownLogo } from "../icons";
 import { useUser } from "@/src/context/user.provider";
 import { toast } from "sonner";
 import { IPost } from "@/src/types";
+import { UpLogo } from "../../icons";
 
-const DownVote = ({ data }: { data: IPost }) => {
+const UpVote = ({ data }: { data: IPost }) => {
   const { user } = useUser();
 
-  const { mutate: downVote, isPending } = useDownVotePost();
+  const { mutate: upVote, isPending } = useUpVotePost();
 
-  const handleDownVotePost = () => {
+  const handleUpVotePost = () => {
     if (!user) {
       toast.error("Please Login to Vote");
     }
 
-    const downVoteData = {
+    const upVoteData = {
       postId: data?._id,
       user: user?._id,
     };
+    // console.log(upVoteData);
 
-    downVote(downVoteData);
+    upVote(upVoteData);
   };
 
   return (
     <Button
       onClick={() =>
         user?.email !== data?.author?.email
-          ? handleDownVotePost()
+          ? handleUpVotePost()
           : toast.error("You can not vote your post", {
               position: "top-center",
             })
       }
       isLoading={isPending}
     >
-      <DownLogo />
-      {data?.downVote?.length} votes
+      <UpLogo />
+      {data?.upVote?.length} votes
     </Button>
   );
 };
 
-export default DownVote;
+export default UpVote;

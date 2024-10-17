@@ -1,8 +1,7 @@
 "use client";
 import { PdfLogo, ShareLogo, VerifiedLogo } from "@/src/components/icons";
-import DownVote from "@/src/components/modules/DownVote";
+import DownVote from "@/src/components/modules/Post/DownVote";
 import CommentModal from "@/src/components/modules/Post/CommentModal";
-import UpVote from "@/src/components/modules/UpVote";
 import Loading from "@/src/components/UI/Loading";
 import { useGetPosts } from "@/src/hooks/post.hook";
 import { IComment } from "@/src/types";
@@ -11,6 +10,9 @@ import { Button, ButtonGroup } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
 import { useRef } from "react";
 import generatePDF from "react-to-pdf";
+import UpVote from "@/src/components/modules/Post/UpVote";
+import SharePost from "@/src/components/modules/Post/SharePost";
+import { usePathname } from "next/navigation";
 
 interface IProps {
   params: {
@@ -18,6 +20,8 @@ interface IProps {
   };
 }
 const PostDetailsPage = ({ params: { postId } }: IProps) => {
+  const pathname = usePathname();
+  const postUrl = `http://localhost:3000${pathname}`;
   const query = `_id=${postId}`;
 
   const { data, isLoading } = useGetPosts(query);
@@ -68,9 +72,7 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
             <DownVote data={postData} />
 
             <CommentModal postId={postId} />
-            <Button>
-              <ShareLogo /> Share
-            </Button>
+            <SharePost postUrl={postUrl} postTitle={postData?.title} />
             <Button
               onClick={() => generatePDF(targetRef, { filename: "page.pdf" })}
             >
