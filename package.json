@@ -37,6 +37,7 @@
 		"axios": "^1.7.7",
 		"clsx": "2.1.1",
 		"framer-motion": "~11.1.1",
+		"html2pdf.js": "^0.10.2",
 		"intl-messageformat": "^10.5.0",
 		"jsonwebtoken": "^9.0.2",
 		"jwt-decode": "^4.0.0",
@@ -46,6 +47,7 @@
 		"react-dom": "18.3.1",
 		"react-hook-form": "^7.53.0",
 		"react-quill": "^2.0.0",
+		"react-to-pdf": "^1.0.1",
 		"sonner": "^1.5.0"
 	},
 	"devDependencies": {
