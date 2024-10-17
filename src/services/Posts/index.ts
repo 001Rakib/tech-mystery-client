@@ -19,7 +19,7 @@ export const upVotePost = async (upVoteData: FieldValues) => {
       "http://localhost:5000/api/posts/upVote",
       upVoteData
     );
-    revalidateTag("POSTS");
+
     return data;
   } catch (err: any) {
     console.log(err);
@@ -32,7 +32,7 @@ export const downVotePost = async (downVoteData: FieldValues) => {
       "http://localhost:5000/api/posts/downVote",
       downVoteData
     );
-    revalidateTag("POSTS");
+
     return data;
   } catch (err: any) {
     console.log(err);
@@ -45,7 +45,7 @@ export const commentOnPost = async (commentData: FieldValues) => {
       "http://localhost:5000/api/posts/comment",
       commentData
     );
-    revalidateTag("POSTS");
+
     return data;
   } catch (err: any) {
     console.log(err);
