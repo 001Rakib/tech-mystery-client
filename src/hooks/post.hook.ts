@@ -1,6 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FieldValues } from "react-hook-form";
-import { createPost, downVotePost, upVotePost } from "../services/Posts";
+import {
+  commentOnPost,
+  createPost,
+  downVotePost,
+  upVotePost,
+} from "../services/Posts";
 import { toast } from "sonner";
 import axios from "axios";
 
@@ -19,7 +24,7 @@ export const useCreatePost = () => {
 };
 export const useUpVotePost = () => {
   return useMutation<any, Error, FieldValues>({
-    mutationKey: ["POSTS_ID"],
+    mutationKey: ["POSTS"],
     mutationFn: async (upVoteData) => await upVotePost(upVoteData),
     onError: (error) => {
       toast.error(error.message, { position: "top-center" });
@@ -28,8 +33,19 @@ export const useUpVotePost = () => {
 };
 export const useDownVotePost = () => {
   return useMutation<any, Error, FieldValues>({
-    mutationKey: ["POSTS_ID"],
+    mutationKey: ["POSTS"],
     mutationFn: async (downVoteData) => await downVotePost(downVoteData),
+    onError: (error) => {
+      toast.error(error.message, { position: "top-center" });
+    },
+  });
+};
+export const useCommentONPost = () => {
+  return useMutation<any, Error, FieldValues>({
+    mutationKey: ["POSTS"],
+    mutationFn: async (commentData) => await commentOnPost(commentData),
+    onSuccess: () =>
+      toast.success("Comment Posted Successfully", { position: "top-center" }),
     onError: (error) => {
       toast.error(error.message, { position: "top-center" });
     },

@@ -2,17 +2,13 @@
 import { useUser } from "@/src/context/user.provider";
 import { IPost } from "@/src/types";
 import { Avatar } from "@nextui-org/avatar";
-import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import Link from "next/link";
-import { useState } from "react";
 import { Chip } from "@nextui-org/chip";
 import { LockLogo, VerifiedLogo } from "../../icons";
 
 const PostCard = ({ post }: { post: IPost }) => {
-  const [isFollowed, setIsFollowed] = useState(false);
-
   const { user } = useUser();
 
   return (
@@ -53,25 +49,6 @@ const PostCard = ({ post }: { post: IPost }) => {
                 </h4>
               </div>
             </div>
-
-            {user?.email === post?.author?.email ? (
-              ""
-            ) : (
-              <Button
-                className={
-                  isFollowed
-                    ? "bg-transparent text-foreground border-default-200"
-                    : ""
-                }
-                color="primary"
-                radius="full"
-                size="sm"
-                variant={isFollowed ? "bordered" : "solid"}
-                onPress={() => setIsFollowed(!isFollowed)}
-              >
-                {isFollowed ? "Unfollow" : "Follow"}
-              </Button>
-            )}
           </CardHeader>
           <Link
             href={

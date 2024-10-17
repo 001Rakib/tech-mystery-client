@@ -7,7 +7,7 @@ import { FieldValues } from "react-hook-form";
 export const createPost = async (postData: FieldValues) => {
   try {
     const { data } = await axiosInstance.post("/posts", postData);
-    revalidateTag("POSTS");
+    revalidateTag("ALL_POSTS");
     return data;
   } catch (err: any) {
     throw new Error(err);
@@ -19,7 +19,7 @@ export const upVotePost = async (upVoteData: FieldValues) => {
       "http://localhost:5000/api/posts/upVote",
       upVoteData
     );
-    revalidateTag("POST_ID");
+    revalidateTag("POSTS");
     return data;
   } catch (err: any) {
     console.log(err);
@@ -32,7 +32,20 @@ export const downVotePost = async (downVoteData: FieldValues) => {
       "http://localhost:5000/api/posts/downVote",
       downVoteData
     );
-    revalidateTag("POST_ID");
+    revalidateTag("POSTS");
+    return data;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error(err);
+  }
+};
+export const commentOnPost = async (commentData: FieldValues) => {
+  try {
+    const { data } = await axios.put(
+      "http://localhost:5000/api/posts/comment",
+      commentData
+    );
+    revalidateTag("POSTS");
     return data;
   } catch (err: any) {
     console.log(err);
@@ -52,7 +65,7 @@ export const getSinglePost = async (postId: string) => {
 };
 export const getPosts = async () => {
   const res = await fetch("http://localhost:5000/api/posts", {
-    next: { tags: ["POSTS"] },
+    next: { tags: ["All_POSTS"] },
   });
 
   return res.json();

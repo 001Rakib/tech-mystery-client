@@ -60,7 +60,7 @@ export interface IComment {
     isPremiumMember: boolean;
     profileImg: string;
   };
-  content: string;
+  comment: string;
   claps: IVote[];
   createdAt: string;
   updatedAt: string;

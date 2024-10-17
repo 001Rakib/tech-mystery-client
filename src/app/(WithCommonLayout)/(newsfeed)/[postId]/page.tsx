@@ -1,15 +1,11 @@
 "use client";
-import {
-  CommentLogo,
-  PdfLogo,
-  ShareLogo,
-  VerifiedLogo,
-} from "@/src/components/icons";
+import { PdfLogo, ShareLogo, VerifiedLogo } from "@/src/components/icons";
 import DownVote from "@/src/components/modules/DownVote";
+import CommentModal from "@/src/components/modules/Post/CommentModal";
 import UpVote from "@/src/components/modules/UpVote";
 import Loading from "@/src/components/UI/Loading";
 import { useGetPosts } from "@/src/hooks/post.hook";
-import { getSinglePost } from "@/src/services/Posts";
+import { IComment } from "@/src/types";
 import { Avatar } from "@nextui-org/avatar";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
@@ -71,22 +67,42 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
             <UpVote data={postData} />
             <DownVote data={postData} />
 
+            <CommentModal postId={postId} />
             <Button>
-              {" "}
-              <CommentLogo />
-              Comment
-            </Button>
-            <Button>
-              {" "}
               <ShareLogo /> Share
             </Button>
             <Button
               onClick={() => generatePDF(targetRef, { filename: "page.pdf" })}
             >
-              {" "}
               <PdfLogo /> Save as PDF
             </Button>
           </ButtonGroup>
+        </div>
+        {/* show comment here */}
+        <div className="my-5">
+          <h1 className="font-bold text-xl my-4">Comments</h1>
+          {postData?.comments.length ? (
+            postData?.comments?.map((comment: IComment) => (
+              <div className="flex gap-5">
+                <Avatar
+                  radius="full"
+                  size="md"
+                  src={comment?.user?.profileImg}
+                />
+                <div className="flex flex-col gap-1 items-start justify-center">
+                  <h4 className="text-small font-semibold leading-none text-default-600 flex gap-1">
+                    {comment?.user.name}
+                    {comment?.user.isPremiumMember && <VerifiedLogo />}
+                  </h4>
+                  <p> {comment?.comment} </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div>
+              <h1>No one Commented Yet</h1>
+            </div>
+          )}
         </div>
       </div>
     </>
