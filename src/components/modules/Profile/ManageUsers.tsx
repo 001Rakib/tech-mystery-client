@@ -14,6 +14,7 @@ import { useGetAllUser } from "@/src/hooks/user.hook";
 import Loading from "../../UI/Loading";
 import { IUserResponse } from "@/src/types";
 import { Spinner } from "@nextui-org/spinner";
+import EditUserStatusModal from "./Admin/EditUserStatusModal";
 
 const ManageUsers = () => {
   const { data, isLoading } = useGetAllUser();
@@ -70,7 +71,11 @@ const ManageUsers = () => {
                     : "N/A"}
                 </TableCell>
                 <TableCell className="flex gap-3">
-                  <EditIcon />
+                  <EditUserStatusModal
+                    id={user?._id}
+                    role={user?.role}
+                    status={user?.isBlocked}
+                  />
                   <div className="text-red-600">
                     <DeleteIcon />
                   </div>

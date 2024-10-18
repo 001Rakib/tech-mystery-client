@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FieldValues } from "react-hook-form";
 import {
   followUser,
@@ -43,12 +43,30 @@ export const useGetUserToFollow = (id: string) => {
 export const useUpdateUser = () => {
   const { user } = useUser();
 
+  const queryClient = useQueryClient();
   return useMutation<any, Error, FieldValues, string>({
     mutationKey: ["S_USER"],
     mutationFn: async (updateData) =>
       await updateUser(updateData, user?._id as string),
     onSuccess: () => {
       toast.success("User Updated successfully", { position: "top-center" });
+      queryClient.invalidateQueries({ queryKey: ["S_USER"] });
+    },
+    onError: (error) => {
+      toast.error(error.message, { position: "top-center" });
+    },
+  });
+};
+export const useUpdateUserStatus = (id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<any, Error, FieldValues, string>({
+    mutationKey: ["USER"],
+    mutationFn: async (updateData) => await updateUser(updateData, id),
+    onSuccess: () => {
+      toast.success("User Status updated successfully", {
+        position: "top-center",
+      });
+      queryClient.invalidateQueries({ queryKey: ["USER"] });
     },
     onError: (error) => {
       toast.error(error.message, { position: "top-center" });

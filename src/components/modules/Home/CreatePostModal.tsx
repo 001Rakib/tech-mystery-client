@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { WriteLogo } from "../../icons";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { Input, Textarea } from "@nextui-org/input";
@@ -21,16 +21,17 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { categoryField } from "@/src/constant";
 import { Checkbox } from "@nextui-org/checkbox";
 import Loading from "../../UI/Loading";
-import { useRouter } from "next/navigation";
 
 const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function CreatePostModal() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [content, setContent] = useState("");
   const { user } = useUser();
   const { mutate: createPost, isPending } = useCreatePost();
+  const [imageFiles, setImageFiles] = useState<File[] | []>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
 
   const quillModules = {
     toolbar: [
@@ -105,7 +106,7 @@ export default function CreatePostModal() {
   };
 
   const handleCreatePost: SubmitHandler<FieldValues> = async (data) => {
-    const imageUrl = await uploadImage(data.images[0]);
+    const imageUrl = await uploadImage(imageFiles[0]);
 
     const postData = {
       ...data,
@@ -113,7 +114,24 @@ export default function CreatePostModal() {
       images: imageUrl?.data.url,
       author: user?._id,
     };
-    const res = await createPost(postData);
+    await createPost(postData);
+    reset();
+  };
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files![0];
+
+    setImageFiles((prev) => [...prev, file]);
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setImagePreviews((prev) => [...prev, reader.result as string]);
+      };
+
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -129,11 +147,11 @@ export default function CreatePostModal() {
       </Button>
 
       <Modal
-        size="lg"
+        size="full"
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         placement="top-center"
-        scrollBehavior="normal"
+        scrollBehavior="outside"
         backdrop="blur"
       >
         <ModalContent>
@@ -172,13 +190,35 @@ export default function CreatePostModal() {
                         ))}
                       </Select>
                     </div>
-                    <label htmlFor="image">Upload Image</label>
+                    <label
+                      className="flex h-14 w-full cursor-pointer items-center justify-center rounded-xl border-2 border-default-200 text-default-500 shadow-sm transition-all duration-100 hover:border-default-400 mt-2"
+                      htmlFor="image"
+                    >
+                      Upload Photo
+                    </label>
                     <input
-                      className="block mb-2"
-                      type="file"
+                      className="hidden"
                       id="image"
-                      {...register("images")}
+                      type="file"
+                      onChange={(e) => handleImageChange(e)}
                     />
+
+                    {imagePreviews.length > 0 && (
+                      <div className="flex gap-5 my-5 flex-wrap">
+                        {imagePreviews.map((imageDataUrl) => (
+                          <div
+                            key={imageDataUrl}
+                            className="relative size-48 rounded-xl border-2 border-dashed border-default-300 p-2"
+                          >
+                            <img
+                              alt="item"
+                              className="h-full w-full object-cover object-center rounded-md"
+                              src={imageDataUrl}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
                     <div className="h-full">
                       <label>Description</label>

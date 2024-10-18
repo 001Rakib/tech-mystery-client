@@ -10,11 +10,13 @@ import { toast } from "sonner";
 import axios from "axios";
 
 export const useCreatePost = () => {
+  const queryClient = useQueryClient();
   return useMutation<any, Error, FieldValues>({
     mutationKey: ["ALL_POSTS"],
     mutationFn: async (postData) => await createPost(postData),
     onSuccess: () => {
       toast.success("Post created successfully", { position: "top-center" });
+      queryClient.invalidateQueries({ queryKey: ["ALL_POSTS"] });
     },
     onError: (error) => {
       console.log(error);

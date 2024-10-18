@@ -1,5 +1,5 @@
 "use client";
-import { VerifiedLogo } from "@/src/components/icons";
+import { CameraIcon, VerifiedLogo } from "@/src/components/icons";
 import ManageUsers from "@/src/components/modules/Profile/ManageUsers";
 import MyFollowers from "@/src/components/modules/Profile/MyFollowers";
 import MyFollowing from "@/src/components/modules/Profile/MyFollowing";
@@ -7,16 +7,20 @@ import MyPost from "@/src/components/modules/Profile/MyPost";
 import ProfileEditModal from "@/src/components/modules/Profile/ProfileEditModal";
 import Loading from "@/src/components/UI/Loading";
 import { useUser } from "@/src/context/user.provider";
-import { useGetSingleUser } from "@/src/hooks/user.hook";
+import { useGetSingleUser, useUpdateUser } from "@/src/hooks/user.hook";
 
 import { IUser } from "@/src/types";
+import { uploadImage } from "@/src/utils/uploadImage";
 import { Avatar } from "@nextui-org/avatar";
 import { Tab, Tabs } from "@nextui-org/tabs";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 const Profile = () => {
   const { user } = useUser();
-
+  const { register, handleSubmit } = useForm();
   const { data, isLoading } = useGetSingleUser(user?._id as string);
+
+  const { mutate: changeProfileImg, isPending } = useUpdateUser();
 
   let tabs =
     user?.role === "admin"
@@ -74,34 +78,75 @@ const Profile = () => {
           },
         ];
 
+  const handleProfilePictureChange: SubmitHandler<FieldValues> = async (
+    data
+  ) => {
+    const imageUrl = await uploadImage(data.profileImg[0]);
+
+    const postData = {
+      profileImg: imageUrl?.data.url,
+    };
+    changeProfileImg(postData);
+  };
+
   return (
     <>
       {isLoading && <Loading />}
+      {isPending && <Loading />}
       <div className="max-w-7xl mx-auto px-6 my-10">
         {/* user image and personal details */}
-        <div className="flex gap-5">
-          <Avatar radius="full" size="lg" src={data?.profileImg} />
-          <div className="flex flex-col gap-1 items-start justify-center">
-            <h4 className="text-xl font-semibold leading-none text-default-900 flex gap-1">
-              {data?.name}
-              {data?.isPremiumMember && <VerifiedLogo />}
-            </h4>
-            <ProfileEditModal user={data as IUser} />
-          </div>
-        </div>
-        <div className="my-10 grid grid-cols-3 gap-5">
-          <div className="flex w-full flex-col col-span-2">
-            <Tabs aria-label="Dynamic tabs" items={tabs}>
-              {(item) => (
-                <Tab key={item.id} title={item.label}>
-                  {item.content}
-                </Tab>
-              )}
-            </Tabs>
-          </div>
+
+        <div className="lg:order-2 lg:col-span-1 order-1">
           <div>
-            <p>Change Password</p>
-            <p>Get Verified and Access Premium Content</p>
+            <div className="relative group">
+              <Avatar
+                alt={data?.name}
+                className="w-24 h-24 mb-3 mt-4"
+                src={data?.profileImg}
+              />
+
+              {user && (
+                <>
+                  <label
+                    className="absolute w-24 inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-100 transition-opacity duration-300 cursor-pointer rounded-full"
+                    htmlFor="profile-picture"
+                  >
+                    {/* <span className="text-white">Change</span> */}
+                    <CameraIcon />
+                  </label>
+                  <form onChange={handleSubmit(handleProfilePictureChange)}>
+                    <input
+                      accept="image/*"
+                      className="hidden"
+                      id="profile-picture"
+                      type="file"
+                      {...register("profileImg")}
+                    />
+                  </form>
+                </>
+              )}
+            </div>
+            <div>
+              <h1 className="font-semibold text-xl text-default-800">
+                {data?.name}
+              </h1>
+              <ProfileEditModal user={data as IUser} />
+            </div>
+          </div>
+          <div className="my-10 grid grid-cols-3 gap-5">
+            <div className="flex w-full flex-col col-span-2">
+              <Tabs aria-label="Dynamic tabs" items={tabs}>
+                {(item) => (
+                  <Tab key={item.id} title={item.label}>
+                    {item.content}
+                  </Tab>
+                )}
+              </Tabs>
+            </div>
+            <div>
+              <p>Change Password</p>
+              <p>Get Verified and Access Premium Content</p>
+            </div>
           </div>
         </div>
       </div>
