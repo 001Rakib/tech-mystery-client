@@ -17,36 +17,39 @@ const FollowUserList = () => {
       follower: currentUser?._id,
       following: id,
     };
-    const res = followUser(followData);
-    console.log(res);
+    followUser(followData);
   };
 
   return (
     <>
       {isLoading && <Loading />}
-      {data?.data?.map((user: IUserResponse) => (
-        <div key={user._id} className="my-5">
-          <div className="flex gap-5">
-            <Avatar radius="full" size="lg" src={user?.profileImg} />
-            <div className="flex flex-col gap-1 items-start justify-center">
-              <h4 className="text-xl font-semibold leading-none text-default-900 flex gap-1">
-                {user?.name}
-                {user?.isPremiumMember && <VerifiedLogo />}
-              </h4>
-              <Button
-                onClick={() => handleFollow(user._id)}
-                className=""
-                isLoading={isPending}
-                color="primary"
-                radius="full"
-                size="sm"
-              >
-                Follow
-              </Button>
+      {data?.data?.length ? (
+        data?.data?.map((user: IUserResponse) => (
+          <div key={user._id} className="my-5">
+            <div className="flex gap-5">
+              <Avatar radius="full" size="lg" src={user?.profileImg} />
+              <div className="flex flex-col gap-1 items-start justify-center">
+                <h4 className="text-xl font-semibold leading-none text-default-900 flex gap-1">
+                  {user?.name}
+                  {user?.isPremiumMember && <VerifiedLogo />}
+                </h4>
+                <Button
+                  onClick={() => handleFollow(user._id)}
+                  className=""
+                  isLoading={isPending}
+                  color="primary"
+                  radius="full"
+                  size="sm"
+                >
+                  Follow
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))
+      ) : (
+        <>Login to see</>
+      )}
     </>
   );
 };

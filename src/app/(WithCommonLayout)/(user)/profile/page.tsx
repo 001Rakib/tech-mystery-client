@@ -1,12 +1,13 @@
 "use client";
 import { VerifiedLogo } from "@/src/components/icons";
+import ManageUsers from "@/src/components/modules/Profile/ManageUsers";
 import MyFollowers from "@/src/components/modules/Profile/MyFollowers";
 import MyFollowing from "@/src/components/modules/Profile/MyFollowing";
 import MyPost from "@/src/components/modules/Profile/MyPost";
 import ProfileEditModal from "@/src/components/modules/Profile/ProfileEditModal";
 import Loading from "@/src/components/UI/Loading";
 import { useUser } from "@/src/context/user.provider";
-import { useGetUser } from "@/src/hooks/user.hook";
+import { useGetSingleUser } from "@/src/hooks/user.hook";
 
 import { IUser } from "@/src/types";
 import { Avatar } from "@nextui-org/avatar";
@@ -14,8 +15,9 @@ import { Tab, Tabs } from "@nextui-org/tabs";
 
 const Profile = () => {
   const { user } = useUser();
-  const { data, isLoading } = useGetUser(user?.email as string);
-  // console.log(data?.data?.following);
+
+  const { data, isLoading } = useGetSingleUser(user?._id as string);
+
   let tabs =
     user?.role === "admin"
       ? [
@@ -38,15 +40,13 @@ const Profile = () => {
           {
             id: "followers",
             label: "Followers",
-            content:
-              "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            content: <MyFollowers payload={data?.data?.followers} />,
           },
 
           {
             id: "users",
             label: "Manage Users",
-            content:
-              "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            content: <ManageUsers />,
           },
         ]
       : [
@@ -80,13 +80,13 @@ const Profile = () => {
       <div className="max-w-7xl mx-auto px-6 my-10">
         {/* user image and personal details */}
         <div className="flex gap-5">
-          <Avatar radius="full" size="lg" src={data?.data?.profileImg} />
+          <Avatar radius="full" size="lg" src={data?.profileImg} />
           <div className="flex flex-col gap-1 items-start justify-center">
             <h4 className="text-xl font-semibold leading-none text-default-900 flex gap-1">
-              {data?.data?.name}
-              {data?.data?.isPremiumMember && <VerifiedLogo />}
+              {data?.name}
+              {data?.isPremiumMember && <VerifiedLogo />}
             </h4>
-            <ProfileEditModal user={data?.data as IUser} />
+            <ProfileEditModal user={data as IUser} />
           </div>
         </div>
         <div className="my-10 grid grid-cols-3 gap-5">

@@ -2,7 +2,11 @@ import { IfollowersAndFollowing } from "@/src/types";
 import { Avatar } from "@nextui-org/avatar";
 import { VerifiedLogo } from "../../icons";
 
-const MyFollowing = ({ payload }: { payload: IfollowersAndFollowing[] }) => {
+const MyFollowing = ({
+  payload = [],
+}: {
+  payload: IfollowersAndFollowing[];
+}) => {
   return (
     <div>
       {payload.length ? (

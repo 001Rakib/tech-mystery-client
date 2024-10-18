@@ -85,7 +85,7 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
           <h1 className="font-bold text-xl my-4">Comments</h1>
           {postData?.comments.length ? (
             postData?.comments?.map((comment: IComment) => (
-              <div className="flex gap-5">
+              <div key={comment._id} className="flex gap-5">
                 <Avatar
                   radius="full"
                   size="md"

@@ -1,17 +1,20 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FieldValues } from "react-hook-form";
-import { followUser, updateUser } from "../services/User";
+import {
+  followUser,
+  getAllUser,
+  getSingleUser,
+  updateUser,
+} from "../services/User";
 import { toast } from "sonner";
 import { useUser } from "../context/user.provider";
 import axios from "axios";
 
-export const useGetUser = (email: string) => {
+export const useGetSingleUser = (id: string) => {
   return useQuery({
-    queryKey: ["USER"],
+    queryKey: ["S_USER"],
     queryFn: async () => {
-      const response = await axios.get(
-        `http://localhost:5000/api/auth/user/${email}`
-      );
+      const response = await getSingleUser(id);
       return response.data; // Return the data from the response
     },
   });
@@ -20,7 +23,7 @@ export const useGetAllUser = () => {
   return useQuery({
     queryKey: ["USER"],
     queryFn: async () => {
-      const response = await axios.get(`http://localhost:5000/api/auth/user`);
+      const response = await getAllUser();
       return response.data; // Return the data from the response
     },
   });
@@ -41,7 +44,7 @@ export const useUpdateUser = () => {
   const { user } = useUser();
 
   return useMutation<any, Error, FieldValues, string>({
-    mutationKey: ["USER"],
+    mutationKey: ["S_USER"],
     mutationFn: async (updateData) =>
       await updateUser(updateData, user?._id as string),
     onSuccess: () => {
