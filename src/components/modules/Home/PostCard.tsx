@@ -13,7 +13,9 @@ const PostCard = ({ post }: { post: IPost }) => {
 
   return (
     <>
-      {post.isPremium && !user?.isPremiumMember ? (
+      {post.isPremium &&
+      !user?.isPremiumMember &&
+      user?.email !== post.author.email ? (
         <>
           <Card>
             <Link
