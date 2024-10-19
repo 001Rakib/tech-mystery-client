@@ -3,6 +3,7 @@ import { FieldValues } from "react-hook-form";
 import {
   commentOnPost,
   createPost,
+  deleteComment,
   downVotePost,
   editComment,
   upVotePost,
@@ -75,6 +76,20 @@ export const useEditComment = () => {
     mutationFn: async (commentData) => await editComment(commentData),
     onSuccess: () => {
       toast.success("Comment Edited Successfully", { position: "top-center" });
+      queryClient.invalidateQueries({ queryKey: ["POSTS"] });
+    },
+    onError: (error) => {
+      toast.error(error.message, { position: "top-center" });
+    },
+  });
+};
+export const useDeleteComment = () => {
+  const queryClient = useQueryClient();
+  return useMutation<any, Error, FieldValues>({
+    mutationKey: ["POSTS"],
+    mutationFn: async (deleteData) => await deleteComment(deleteData),
+    onSuccess: () => {
+      toast.success("Comment deleted Successfully", { position: "top-center" });
       queryClient.invalidateQueries({ queryKey: ["POSTS"] });
     },
     onError: (error) => {

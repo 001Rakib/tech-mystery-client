@@ -8,7 +8,7 @@ import {
 import DownVote from "@/src/components/modules/Post/DownVote";
 import CommentModal from "@/src/components/modules/Post/CommentModal";
 import Loading from "@/src/components/UI/Loading";
-import { useGetPosts } from "@/src/hooks/post.hook";
+import { useDeleteComment, useGetPosts } from "@/src/hooks/post.hook";
 import { IComment } from "@/src/types";
 import { Avatar } from "@nextui-org/avatar";
 import { Button, ButtonGroup } from "@nextui-org/button";
@@ -19,6 +19,8 @@ import UpVote from "@/src/components/modules/Post/UpVote";
 import SharePost from "@/src/components/modules/Post/SharePost";
 import { usePathname } from "next/navigation";
 import EditCommentModal from "@/src/components/modules/Post/EditComment";
+import { useUser } from "@/src/context/user.provider";
+import { Spinner } from "@nextui-org/spinner";
 
 interface IProps {
   params: {
@@ -29,11 +31,21 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
   const pathname = usePathname();
   const postUrl = `http://localhost:3000${pathname}`;
   const query = `_id=${postId}`;
-
+  const { user } = useUser();
   const { data, isLoading } = useGetPosts(query);
+  const { mutate: deleteComment, isPending } = useDeleteComment();
   const targetRef = useRef<HTMLDivElement | null>(null);
 
   const postData = data ? data[0] : null;
+
+  const handleDeleteComment = (commentId: string) => {
+    const commentData = {
+      user: user?._id,
+      commentId: commentId,
+      postId: postId,
+    };
+    deleteComment(commentData); // Call the delete comment API
+  };
 
   return (
     <>
@@ -103,16 +115,23 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
                     {comment?.user.isPremiumMember && <VerifiedLogo />}
                   </h4>
                   <p> {comment?.comment} </p>
-                  <div className="flex gap-2 items-center">
-                    <EditCommentModal
-                      commentId={comment?._id}
-                      comment={comment?.comment}
-                      postId={postId}
-                    />
-                    <div className="cursor-pointer text-red-600">
-                      <DeleteIcon />
+
+                  {comment?.user._id === user?._id && (
+                    <div className="flex gap-2 items-center">
+                      <EditCommentModal
+                        commentId={comment?._id}
+                        comment={comment?.comment}
+                        postId={postId}
+                      />
+                      <div
+                        onClick={() => handleDeleteComment(comment._id)}
+                        className="cursor-pointer text-red-600 flex items-center gap-2"
+                      >
+                        {isPending && <Spinner size="sm" />}
+                        <DeleteIcon />
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             ))
