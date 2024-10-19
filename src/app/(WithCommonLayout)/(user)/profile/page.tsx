@@ -127,8 +127,9 @@ const Profile = () => {
               )}
             </div>
             <div>
-              <h1 className="font-semibold text-xl text-default-800">
+              <h1 className="font-semibold text-xl text-default-800 flex gap-1 items-center">
                 {data?.name}
+                {data?.isPremiumMember && <VerifiedLogo />}
               </h1>
               <ProfileEditModal user={data as IUser} />
             </div>

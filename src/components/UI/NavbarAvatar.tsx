@@ -41,7 +41,7 @@ export default function NavbarAvatar() {
         {isLoading ? (
           <Spinner size="sm" />
         ) : (
-          <Avatar className="cursor-pointer" src={data?.data?.profileImg} />
+          <Avatar className="cursor-pointer" src={data?.profileImg} />
         )}
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions">

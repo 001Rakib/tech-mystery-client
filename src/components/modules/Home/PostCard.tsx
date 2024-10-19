@@ -13,17 +13,9 @@ const PostCard = ({ post }: { post: IPost }) => {
 
   return (
     <>
-      {post.isPremium ? (
+      {post.isPremium && !user?.isPremiumMember ? (
         <>
-          <Card
-            className={
-              post.isPremium &&
-              !user?.isPremiumMember &&
-              post?.author.email !== user?.email
-                ? " h-full pb-3"
-                : "h-full pb-3"
-            }
-          >
+          <Card>
             <Link
               href={
                 post.isPremium &&
