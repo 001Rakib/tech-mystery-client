@@ -34,7 +34,7 @@ const ChangePasswordModal = () => {
 
   return (
     <div>
-      <Button onPress={onOpen} variant="bordered" color="primary">
+      <Button onPress={onOpen} size="sm" variant="bordered" color="primary">
         Change Password
       </Button>
       <Modal

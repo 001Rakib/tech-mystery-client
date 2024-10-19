@@ -25,8 +25,6 @@ const Profile = () => {
 
   const { mutate: changeProfileImg, isPending } = useUpdateUser();
 
-  console.log(data);
-
   let tabs =
     user?.role === "admin"
       ? [
@@ -74,12 +72,12 @@ const Profile = () => {
           {
             id: "following",
             label: "Following",
-            content: <MyFollowing payload={data?.data?.following} />,
+            content: <MyFollowing payload={data?.following} />,
           },
           {
             id: "followers",
             label: "Followers",
-            content: <MyFollowers payload={data?.data?.followers} />,
+            content: <MyFollowers payload={data?.followers} />,
           },
         ];
 
@@ -138,17 +136,6 @@ const Profile = () => {
               </h1>
               <ProfileEditModal user={data as IUser} />
             </div>
-          </div>
-          <div className="my-10 grid grid-cols-3 gap-5">
-            <div className="flex w-full flex-col col-span-2">
-              <Tabs aria-label="Dynamic tabs" items={tabs}>
-                {(item) => (
-                  <Tab key={item.id} title={item.label}>
-                    {item.content}
-                  </Tab>
-                )}
-              </Tabs>
-            </div>
             <div>
               <ChangePasswordModal />
               {!data?.isPremiumMember && (
@@ -159,6 +146,17 @@ const Profile = () => {
                   </Button>
                 </Link>
               )}
+            </div>
+          </div>
+          <div className="my-10 grid grid-cols-3">
+            <div className="flex w-full flex-col col-span-2">
+              <Tabs aria-label="Dynamic tabs" items={tabs}>
+                {(item) => (
+                  <Tab key={item.id} title={item.label}>
+                    {item.content}
+                  </Tab>
+                )}
+              </Tabs>
             </div>
           </div>
         </div>

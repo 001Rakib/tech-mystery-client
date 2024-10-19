@@ -30,7 +30,11 @@ interface IProps {
 const PostDetailsPage = ({ params: { postId } }: IProps) => {
   const pathname = usePathname();
   const postUrl = `http://localhost:3000${pathname}`;
-  const query = `_id=${postId}`;
+
+  const query = {
+    _id: postId,
+  };
+
   const { user } = useUser();
   const { data, isLoading } = useGetPosts(query);
   const { mutate: deleteComment, isPending } = useDeleteComment();
@@ -84,7 +88,7 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
           dangerouslySetInnerHTML={{ __html: postData?.description }}
         />
 
-        <div>
+        <div className="mt-4">
           <ButtonGroup>
             <UpVote data={postData} />
             <DownVote data={postData} />
