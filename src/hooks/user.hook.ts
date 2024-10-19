@@ -75,10 +75,12 @@ export const useUpdateUserStatus = (id: string) => {
   });
 };
 export const useFollowUser = () => {
+  const queryClient = useQueryClient();
   return useMutation<any, Error, FieldValues>({
     mutationKey: ["FOLLOW"],
     mutationFn: async (followData) => await followUser(followData),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["FOLLOW"] });
       toast.success("Followed successfully", { position: "top-center" });
     },
     onError: (error) => {

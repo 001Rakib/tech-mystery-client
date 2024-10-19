@@ -25,6 +25,8 @@ const Profile = () => {
 
   const { mutate: changeProfileImg, isPending } = useUpdateUser();
 
+  console.log(data);
+
   let tabs =
     user?.role === "admin"
       ? [
@@ -42,12 +44,12 @@ const Profile = () => {
           {
             id: "following",
             label: "Following",
-            content: <MyFollowing payload={data?.data?.following} />,
+            content: <MyFollowing payload={data?.following} />,
           },
           {
             id: "followers",
             label: "Followers",
-            content: <MyFollowers payload={data?.data?.followers} />,
+            content: <MyFollowers payload={data?.followers} />,
           },
 
           {
