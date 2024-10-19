@@ -10,6 +10,7 @@ import {
 } from "../services/Posts";
 import { toast } from "sonner";
 import axios from "axios";
+import qs from "qs";
 
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
@@ -97,15 +98,30 @@ export const useDeleteComment = () => {
     },
   });
 };
-export const useGetPosts = (query: string) => {
+export const useGetPosts = (query: {
+  category?: string;
+  author?: string;
+  searchTerm?: string;
+  sortBY?: string;
+  isPremiumContent?: boolean;
+  topic?: string;
+  _id?: string;
+  page?: number;
+  limit?: number;
+}) => {
   return useQuery({
-    queryKey: ["POSTS"],
+    queryKey: ["POSTS", query],
     queryFn: async () => {
+      const queryString = qs.stringify(query, {
+        addQueryPrefix: true,
+        skipNulls: true,
+      });
+
       const response = await axios.get(
-        `http://localhost:5000/api/posts?${query}`
+        `http://localhost:5000/api/posts${queryString}`
       );
 
-      return response.data.data; // Return the data from the response
+      return response.data.data;
     },
   });
 };

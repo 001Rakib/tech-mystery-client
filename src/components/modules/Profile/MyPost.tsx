@@ -7,7 +7,9 @@ import Loading from "../../UI/Loading";
 const MyPost = () => {
   const { user } = useUser();
 
-  const query = `author=${user?._id}`;
+  const query = {
+    author: user?._id,
+  };
 
   const { data, isLoading } = useGetPosts(query);
 
