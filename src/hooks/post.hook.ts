@@ -4,6 +4,7 @@ import {
   commentOnPost,
   createPost,
   downVotePost,
+  editComment,
   upVotePost,
 } from "../services/Posts";
 import { toast } from "sonner";
@@ -60,6 +61,20 @@ export const useCommentONPost = () => {
     onSuccess: () => {
       toast.success("Comment Posted Successfully", { position: "top-center" });
       // Invalidate the 'POSTS' query so that it refetches the posts
+      queryClient.invalidateQueries({ queryKey: ["POSTS"] });
+    },
+    onError: (error) => {
+      toast.error(error.message, { position: "top-center" });
+    },
+  });
+};
+export const useEditComment = () => {
+  const queryClient = useQueryClient();
+  return useMutation<any, Error, FieldValues>({
+    mutationKey: ["POSTS"],
+    mutationFn: async (commentData) => await editComment(commentData),
+    onSuccess: () => {
+      toast.success("Comment Edited Successfully", { position: "top-center" });
       queryClient.invalidateQueries({ queryKey: ["POSTS"] });
     },
     onError: (error) => {

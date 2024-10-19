@@ -52,6 +52,19 @@ export const commentOnPost = async (commentData: FieldValues) => {
     throw new Error(err);
   }
 };
+export const editComment = async (commentData: FieldValues) => {
+  try {
+    const { data } = await axios.patch(
+      "http://localhost:5000/api/posts/edit-comment",
+      commentData
+    );
+
+    return data;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error(err);
+  }
+};
 export const getSinglePost = async (postId: string) => {
   const res = await fetch(`http://localhost:5000/api/posts/${postId}`, {
     next: { tags: ["POST_ID"] },

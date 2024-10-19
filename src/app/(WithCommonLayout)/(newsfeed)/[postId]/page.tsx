@@ -1,5 +1,10 @@
 "use client";
-import { PdfLogo, ShareLogo, VerifiedLogo } from "@/src/components/icons";
+import {
+  DeleteIcon,
+  PdfLogo,
+  ShareLogo,
+  VerifiedLogo,
+} from "@/src/components/icons";
 import DownVote from "@/src/components/modules/Post/DownVote";
 import CommentModal from "@/src/components/modules/Post/CommentModal";
 import Loading from "@/src/components/UI/Loading";
@@ -13,6 +18,7 @@ import generatePDF from "react-to-pdf";
 import UpVote from "@/src/components/modules/Post/UpVote";
 import SharePost from "@/src/components/modules/Post/SharePost";
 import { usePathname } from "next/navigation";
+import EditCommentModal from "@/src/components/modules/Post/EditComment";
 
 interface IProps {
   params: {
@@ -97,6 +103,16 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
                     {comment?.user.isPremiumMember && <VerifiedLogo />}
                   </h4>
                   <p> {comment?.comment} </p>
+                  <div className="flex gap-2 items-center">
+                    <EditCommentModal
+                      commentId={comment?._id}
+                      comment={comment?.comment}
+                      postId={postId}
+                    />
+                    <div className="cursor-pointer text-red-600">
+                      <DeleteIcon />
+                    </div>
+                  </div>
                 </div>
               </div>
             ))
