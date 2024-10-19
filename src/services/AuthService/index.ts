@@ -33,6 +33,20 @@ export const logout = () => {
   cookies().delete("refreshToken");
 };
 
+export const changePassword = async (newPassData: FieldValues) => {
+  try {
+    const { data } = await axiosInstance.patch(
+      "/auth/user/change-password",
+      newPassData
+    );
+
+    return data;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error(err);
+  }
+};
+
 export const getCurrentUser = async () => {
   const accessToken = cookies().get("accessToken")?.value;
 

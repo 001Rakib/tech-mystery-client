@@ -1,5 +1,6 @@
 "use client";
 import { CameraIcon, VerifiedLogo } from "@/src/components/icons";
+import ChangePasswordModal from "@/src/components/modules/Profile/ChangePasswordModal";
 import ManageUsers from "@/src/components/modules/Profile/ManageUsers";
 import MyFollowers from "@/src/components/modules/Profile/MyFollowers";
 import MyFollowing from "@/src/components/modules/Profile/MyFollowing";
@@ -12,7 +13,9 @@ import { useGetSingleUser, useUpdateUser } from "@/src/hooks/user.hook";
 import { IUser } from "@/src/types";
 import { uploadImage } from "@/src/utils/uploadImage";
 import { Avatar } from "@nextui-org/avatar";
+import { Button } from "@nextui-org/button";
 import { Tab, Tabs } from "@nextui-org/tabs";
+import Link from "next/link";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 const Profile = () => {
@@ -145,8 +148,15 @@ const Profile = () => {
               </Tabs>
             </div>
             <div>
-              <p>Change Password</p>
-              <p>Get Verified and Access Premium Content</p>
+              <ChangePasswordModal />
+              {!data?.isPremiumMember && (
+                <Link href={"/pricing"}>
+                  {" "}
+                  <Button className="my-2" variant="bordered" color="primary">
+                    Get Verified and Access Premium Content
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
