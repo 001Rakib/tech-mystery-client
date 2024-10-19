@@ -15,6 +15,7 @@ import Loading from "../../UI/Loading";
 import { IUserResponse } from "@/src/types";
 import { Spinner } from "@nextui-org/spinner";
 import EditUserStatusModal from "./Admin/EditUserStatusModal";
+import DeleteUserModal from "./Admin/DeleteUserModal";
 
 const ManageUsers = () => {
   const { data, isLoading } = useGetAllUser();
@@ -77,7 +78,7 @@ const ManageUsers = () => {
                     status={user?.isBlocked}
                   />
                   <div className="text-red-600">
-                    <DeleteIcon />
+                    <DeleteUserModal id={user?._id} />
                   </div>
                 </TableCell>
               </TableRow>

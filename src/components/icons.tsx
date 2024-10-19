@@ -498,3 +498,24 @@ export const CameraIcon = () => (
     />
   </svg>
 );
+export const DangerIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 64 64"
+    width="64"
+    height="64"
+    fill="none"
+    stroke="currentColor"
+  >
+    <g strokeLinecap="round" strokeLinejoin="round">
+      <polygon
+        fill="#ff5252"
+        stroke="#ff5252"
+        strokeWidth="2"
+        points="32 4 2 58 62 58 32 4"
+      />
+      <line x1="32" y1="22" x2="32" y2="38" stroke="#fff" strokeWidth="4" />
+      <circle cx="32" cy="48" r="2" fill="#fff" />
+    </g>
+  </svg>
+);

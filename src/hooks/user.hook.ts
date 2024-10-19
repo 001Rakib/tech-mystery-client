@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FieldValues } from "react-hook-form";
 import {
+  deleteUser,
   followUser,
   getAllUser,
   getSingleUser,
@@ -79,6 +80,18 @@ export const useFollowUser = () => {
     mutationFn: async (followData) => await followUser(followData),
     onSuccess: () => {
       toast.success("Followed successfully", { position: "top-center" });
+    },
+    onError: (error) => {
+      toast.error(error.message, { position: "top-center" });
+    },
+  });
+};
+export const useDeleteUser = () => {
+  return useMutation<any, Error, string>({
+    mutationKey: ["USER"],
+    mutationFn: async (id) => await deleteUser(id),
+    onSuccess: () => {
+      toast.success("User deleted successfully", { position: "top-center" });
     },
     onError: (error) => {
       toast.error(error.message, { position: "top-center" });

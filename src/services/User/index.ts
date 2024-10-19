@@ -37,6 +37,16 @@ export const followUser = async (followData: FieldValues) => {
     throw new Error(err);
   }
 };
+export const deleteUser = async (id: string) => {
+  try {
+    const { data } = await axiosInstance.delete(`/auth/user/${id}`);
+    revalidateTag("USER");
+    return data;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error(err);
+  }
+};
 export const getAllUser = async () => {
   try {
     const { data } = await axiosInstance.get(`/auth/user`);
