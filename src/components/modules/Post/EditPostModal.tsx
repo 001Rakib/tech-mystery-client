@@ -1,3 +1,9 @@
+// @ts-nocheck
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/alt-text */
+
 "use client";
 import { Button } from "@nextui-org/button";
 import {
@@ -8,107 +14,47 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/modal";
-import { ChangeEvent, useState } from "react";
-import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
+import { ChangeEvent, useRef, useState } from "react";
 import { Input, Textarea } from "@nextui-org/input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { Select, SelectItem } from "@nextui-org/select";
+import { Checkbox } from "@nextui-org/checkbox";
+import { Editor, IAllProps } from "@tinymce/tinymce-react";
+import { Image } from "@nextui-org/image";
+
 import { uploadImage } from "@/src/utils/uploadImage";
 import { useEditPost } from "@/src/hooks/post.hook";
 import { useUser } from "@/src/context/user.provider";
-import { Select, SelectItem } from "@nextui-org/select";
 import { categoryField } from "@/src/constant";
-import { Checkbox } from "@nextui-org/checkbox";
-import Loading from "../../UI/Loading";
 import { IPost } from "@/src/types";
 
-const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
+import Loading from "../../UI/Loading";
+
+interface EditorInstance {
+  getContent: () => string;
+}
 
 export default function EditPostModal({ post }: { post: IPost }) {
-  const { register, handleSubmit } = useForm();
+  const editorRef = useRef<EditorInstance | null>(null);
+  const { register, handleSubmit, setValue } = useForm();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [content, setContent] = useState("");
   const { user } = useUser();
   const { mutate: editPost, isPending } = useEditPost();
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
   const [url, setUrl] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+    post?.category,
+  );
 
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, 4, 5, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link"],
-      [{ align: [] }],
-      [
-        {
-          color: [
-            "#000000",
-            "#e60000",
-            "#ff9900",
-            "#ffff00",
-            "#008a00",
-            "#0066cc",
-            "#9933ff",
-            "#ffffff",
-            "#facccc",
-            "#ffebcc",
-            "#ffffcc",
-            "#cce8cc",
-            "#cce0f5",
-            "#ebd6ff",
-            "#bbbbbb",
-            "#f06666",
-            "#ffc266",
-            "#ffff66",
-            "#66b966",
-            "#66a3e0",
-            "#c285ff",
-            "#888888",
-            "#a10000",
-            "#b26b00",
-            "#b2b200",
-            "#006100",
-            "#0047b2",
-            "#6b24b2",
-            "#444444",
-            "#5c0000",
-            "#663d00",
-            "#666600",
-            "#003700",
-            "#002966",
-            "#3d1466",
-          ],
-        },
-      ],
-      ["code-block"],
-      ["clean"],
-    ],
-  };
+  // For storing the content of the TinyMCE Editor
+  const [content, setContent] = useState<string>(post?.description || "");
 
-  const quillFormats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "link",
-    "align",
-    "color",
-    "code-block",
-  ];
-
-  const handleEditorChange = (newContent: any) => {
-    setContent(newContent);
-  };
-
+  // Handle form submission
   const handleEditPost: SubmitHandler<FieldValues> = async (data) => {
     if (imageFiles.length) {
       const imageUrl = await uploadImage(imageFiles[0]);
+
       setUrl(imageUrl?.data.url);
     }
 
@@ -117,42 +63,47 @@ export default function EditPostModal({ post }: { post: IPost }) {
       description: content || post?.description,
       images: url || post.images[0],
       author: user?._id,
-      category: data.category || post?.category,
+      category: selectedCategory || post?.category,
       id: post._id,
     };
+
     await editPost(postData);
   };
 
+  // Handle image file changes
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0];
 
-    setImageFiles((prev) => [...prev, file]);
-
     if (file) {
+      setImageFiles([file]);
+
       const reader = new FileReader();
 
       reader.onloadend = () => {
-        setImagePreviews((prev) => [...prev, reader.result as string]);
+        setImagePreviews([reader.result as string]);
       };
-
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleEditorInit: IAllProps["onInit"] = (evt, editor) => {
+    editorRef.current = editor;
   };
 
   return (
     <>
       {isPending && <Loading />}
-      <Button size="sm" color="primary" variant="light" onPress={onOpen}>
+      <Button color="primary" size="sm" variant="light" onPress={onOpen}>
         Edit Post
       </Button>
 
       <Modal
-        size="full"
+        backdrop="blur"
         isOpen={isOpen}
-        onOpenChange={onOpenChange}
         placement="top-center"
         scrollBehavior="outside"
-        backdrop="blur"
+        size="full"
+        onOpenChange={onOpenChange}
       >
         <ModalContent>
           {(onClose) => (
@@ -165,32 +116,39 @@ export default function EditPostModal({ post }: { post: IPost }) {
                   <div className="h-full">
                     <Input
                       isRequired
-                      type="text"
-                      label="Title"
-                      defaultValue={post?.title}
                       className="w-full mb-2"
+                      defaultValue={post?.title}
+                      label="Title"
+                      type="text"
                       {...register("title")}
                     />
                     <Textarea
                       isRequired
                       {...register("shortDescription")}
-                      label="Short Description"
-                      defaultValue={post?.shortDescription}
-                      placeholder="Enter your description"
                       className="w-full mb-2"
+                      defaultValue={post?.shortDescription}
+                      label="Short Description"
+                      placeholder="Enter your description"
                     />
 
+                    {/* Category selection */}
                     <div className="flex gap-5">
                       <Select
                         label="Category"
                         placeholder="Select Category"
-                        {...register("category")}
+                        value={selectedCategory} // Bind to the selectedCategory state
+                        onChange={(value) => {
+                          setSelectedCategory(value as unknown as string);
+                          setValue("category", value); // Update form value
+                        }}
                       >
                         {categoryField.map((item) => (
                           <SelectItem key={item.key}>{item.label}</SelectItem>
                         ))}
                       </Select>
                     </div>
+
+                    {/* Image upload */}
                     <label
                       className="flex h-14 w-full cursor-pointer items-center justify-center rounded-xl border-2 border-default-200 text-default-500 shadow-sm transition-all duration-100 hover:border-default-400 mt-2"
                       htmlFor="image"
@@ -204,6 +162,7 @@ export default function EditPostModal({ post }: { post: IPost }) {
                       onChange={(e) => handleImageChange(e)}
                     />
 
+                    {/* Image preview */}
                     {imagePreviews.length > 0 && (
                       <div className="flex gap-5 my-5 flex-wrap">
                         {imagePreviews.map((imageDataUrl) => (
@@ -211,7 +170,7 @@ export default function EditPostModal({ post }: { post: IPost }) {
                             key={imageDataUrl}
                             className="relative size-48 rounded-xl border-2 border-dashed border-default-300 p-2"
                           >
-                            <img
+                            <Image
                               alt="item"
                               className="h-full w-full object-cover object-center rounded-md"
                               src={imageDataUrl}
@@ -221,17 +180,49 @@ export default function EditPostModal({ post }: { post: IPost }) {
                       </div>
                     )}
 
+                    {/* TinyMCE Editor for Description */}
                     <div className="h-full">
                       <label>Description</label>
-                      <QuillEditor
-                        value={content || post?.description}
-                        onChange={handleEditorChange}
-                        modules={quillModules}
-                        formats={quillFormats}
-                        className="w-full h-[70%]  bg-white"
+
+                      <Editor
+                        apiKey="kt1assz7z4seywy42wxjnla1vh604njk9iz95k31qd3o7tky"
+                        init={{
+                          height: 500,
+                          menubar: false,
+                          plugins: [
+                            "advlist",
+                            "autolink",
+                            "lists",
+                            "link",
+                            "image",
+                            "charmap",
+                            "preview",
+                            "anchor",
+                            "searchreplace",
+                            "visualblocks",
+                            "code",
+                            "fullscreen",
+                            "insertdatetime",
+                            "media",
+                            "table",
+                            "code",
+                            "help",
+                            "wordcount",
+                          ],
+                          toolbar:
+                            "undo redo | blocks | " +
+                            "bold italic forecolor | alignleft aligncenter " +
+                            "alignright alignjustify | bullist numlist outdent indent | " +
+                            "removeformat | help",
+                          content_style:
+                            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                        }}
+                        onInit={handleEditorInit}
                       />
                     </div>
                   </div>
+
+                  {/* Premium Content Checkbox */}
                   <Checkbox
                     isDisabled={!user?.isPremiumMember}
                     {...register("isPremium")}
@@ -245,7 +236,7 @@ export default function EditPostModal({ post }: { post: IPost }) {
                   <Button color="danger" variant="flat" onPress={onClose}>
                     Discard Post
                   </Button>
-                  <Button type="submit" color="primary" onPress={onClose}>
+                  <Button color="primary" type="submit" onPress={onClose}>
                     Post
                   </Button>
                 </ModalFooter>

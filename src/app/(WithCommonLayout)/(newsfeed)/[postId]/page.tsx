@@ -1,26 +1,22 @@
 "use client";
-import {
-  DeleteIcon,
-  PdfLogo,
-  ShareLogo,
-  VerifiedLogo,
-} from "@/src/components/icons";
-import DownVote from "@/src/components/modules/Post/DownVote";
-import CommentModal from "@/src/components/modules/Post/CommentModal";
-import Loading from "@/src/components/UI/Loading";
-import { useDeleteComment, useGetPosts } from "@/src/hooks/post.hook";
-import { IComment } from "@/src/types";
 import { Avatar } from "@nextui-org/avatar";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
 import { useRef } from "react";
 import generatePDF from "react-to-pdf";
+import { usePathname } from "next/navigation";
+import { Spinner } from "@nextui-org/spinner";
+
+import { DeleteIcon, PdfLogo, VerifiedLogo } from "@/src/components/icons";
+import DownVote from "@/src/components/modules/Post/DownVote";
+import CommentModal from "@/src/components/modules/Post/CommentModal";
+import Loading from "@/src/components/UI/Loading";
+import { useDeleteComment, useGetPosts } from "@/src/hooks/post.hook";
+import { IComment } from "@/src/types";
 import UpVote from "@/src/components/modules/Post/UpVote";
 import SharePost from "@/src/components/modules/Post/SharePost";
-import { usePathname } from "next/navigation";
 import EditCommentModal from "@/src/components/modules/Post/EditComment";
 import { useUser } from "@/src/context/user.provider";
-import { Spinner } from "@nextui-org/spinner";
 
 interface IProps {
   params: {
@@ -48,6 +44,7 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
       commentId: commentId,
       postId: postId,
     };
+
     deleteComment(commentData); // Call the delete comment API
   };
 
@@ -84,8 +81,8 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
           ))}
         </div>
         <div
-          className="post-content"
           dangerouslySetInnerHTML={{ __html: postData?.description }}
+          className="post-content"
         />
 
         <div className="mt-4">
@@ -94,7 +91,7 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
             <DownVote data={postData} />
 
             <CommentModal postId={postId} />
-            <SharePost postUrl={postUrl} postTitle={postData?.title} />
+            <SharePost postTitle={postData?.title} postUrl={postUrl} />
             <Button
               onClick={() => generatePDF(targetRef, { filename: "page.pdf" })}
             >
@@ -123,13 +120,13 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
                   {comment?.user._id === user?._id && (
                     <div className="flex gap-2 items-center">
                       <EditCommentModal
-                        commentId={comment?._id}
                         comment={comment?.comment}
+                        commentId={comment?._id}
                         postId={postId}
                       />
                       <div
-                        onClick={() => handleDeleteComment(comment._id)}
                         className="cursor-pointer text-red-600 flex items-center gap-2"
+                        onClick={() => handleDeleteComment(comment._id)}
                       >
                         {isPending && <Spinner size="sm" />}
                         <DeleteIcon />

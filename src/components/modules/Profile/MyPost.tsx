@@ -1,6 +1,7 @@
 import { useUser } from "@/src/context/user.provider";
 import { useGetPosts } from "@/src/hooks/post.hook";
 import { IPost } from "@/src/types";
+
 import PostCard from "../Home/PostCard";
 import Loading from "../../UI/Loading";
 

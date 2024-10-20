@@ -1,4 +1,10 @@
 "use client";
+import { Avatar } from "@nextui-org/avatar";
+import { Button } from "@nextui-org/button";
+import { Tab, Tabs } from "@nextui-org/tabs";
+import Link from "next/link";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+
 import { CameraIcon, VerifiedLogo } from "@/src/components/icons";
 import Analytics from "@/src/components/modules/Profile/Admin/Analytics";
 import ManageUsers from "@/src/components/modules/Profile/Admin/ManageUsers";
@@ -11,14 +17,8 @@ import UserAnalytics from "@/src/components/modules/Profile/UserAnalytics";
 import Loading from "@/src/components/UI/Loading";
 import { useUser } from "@/src/context/user.provider";
 import { useGetSingleUser, useUpdateUser } from "@/src/hooks/user.hook";
-
 import { IUser } from "@/src/types";
 import { uploadImage } from "@/src/utils/uploadImage";
-import { Avatar } from "@nextui-org/avatar";
-import { Button } from "@nextui-org/button";
-import { Tab, Tabs } from "@nextui-org/tabs";
-import Link from "next/link";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 const Profile = () => {
   const { user } = useUser();
@@ -26,7 +26,7 @@ const Profile = () => {
   const { data, isLoading } = useGetSingleUser(user?._id as string);
 
   const { mutate: changeProfileImg, isPending } = useUpdateUser();
-  console.log(data);
+
   let tabs =
     user?.role === "admin"
       ? [
@@ -82,13 +82,14 @@ const Profile = () => {
         ];
 
   const handleProfilePictureChange: SubmitHandler<FieldValues> = async (
-    data
+    data,
   ) => {
     const imageUrl = await uploadImage(data.profileImg[0]);
 
     const postData = {
       profileImg: imageUrl?.data.url,
     };
+
     changeProfileImg(postData);
   };
 
@@ -142,10 +143,10 @@ const Profile = () => {
                 <Link href={"/pricing"}>
                   {" "}
                   <Button
-                    size="sm"
                     className="my-2"
-                    variant="bordered"
                     color="primary"
+                    size="sm"
+                    variant="bordered"
                   >
                     Get Verified and Access Premium Content
                   </Button>
@@ -158,8 +159,8 @@ const Profile = () => {
               <div className="w-full overflow-x-auto">
                 <Tabs
                   aria-label="Dynamic tabs"
-                  items={tabs}
                   className="flex-nowrap"
+                  items={tabs}
                 >
                   {(item) => (
                     <Tab key={item.id} title={item.label}>

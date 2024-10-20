@@ -1,5 +1,3 @@
-import { useUpdateUser } from "@/src/hooks/user.hook";
-import { IUser } from "@/src/types";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import {
@@ -11,6 +9,10 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+
+import { IUser } from "@/src/types";
+import { useUpdateUser } from "@/src/hooks/user.hook";
+
 import Loading from "../../UI/Loading";
 
 const ProfileEditModal = ({ user }: { user: IUser }) => {
@@ -23,6 +25,7 @@ const ProfileEditModal = ({ user }: { user: IUser }) => {
     const updateData = {
       name: data.name,
     };
+
     updateUser(updateData);
   };
 
@@ -31,18 +34,18 @@ const ProfileEditModal = ({ user }: { user: IUser }) => {
       {isPending && <Loading />}
       <Button
         className="px-0 py-0"
-        size="sm"
-        onPress={onOpen}
         color="primary"
+        size="sm"
         variant="light"
+        onPress={onOpen}
       >
         Edit Name
       </Button>
       <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        placement="top-center"
         backdrop="blur"
+        isOpen={isOpen}
+        placement="top-center"
+        onOpenChange={onOpenChange}
       >
         <form onSubmit={handleSubmit(handleChangeName)}>
           <ModalContent>
@@ -53,9 +56,8 @@ const ProfileEditModal = ({ user }: { user: IUser }) => {
                 </ModalHeader>
                 <ModalBody>
                   <Input
-                    autoFocus
-                    label="Name"
                     defaultValue={user.name}
+                    label="Name"
                     variant="bordered"
                     {...register("name")}
                   />
@@ -64,7 +66,7 @@ const ProfileEditModal = ({ user }: { user: IUser }) => {
                   <Button color="danger" variant="flat" onPress={onClose}>
                     Cancel
                   </Button>
-                  <Button type="submit" color="primary" onPress={onClose}>
+                  <Button color="primary" type="submit" onPress={onClose}>
                     Update
                   </Button>
                 </ModalFooter>

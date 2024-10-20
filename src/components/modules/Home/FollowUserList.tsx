@@ -1,9 +1,11 @@
 "use client";
+import { Avatar } from "@nextui-org/avatar";
+import { Button } from "@nextui-org/button";
+
 import { useUser } from "@/src/context/user.provider";
 import { useFollowUser, useGetUserToFollow } from "@/src/hooks/user.hook";
 import { IUserResponse } from "@/src/types";
-import { Avatar } from "@nextui-org/avatar";
-import { Button } from "@nextui-org/button";
+
 import Loading from "../../UI/Loading";
 import { VerifiedLogo } from "../../icons";
 
@@ -17,6 +19,7 @@ const FollowUserList = () => {
       follower: currentUser?._id,
       following: id,
     };
+
     followUser(followData);
   };
 
@@ -34,12 +37,12 @@ const FollowUserList = () => {
                   {user?.isPremiumMember && <VerifiedLogo />}
                 </h4>
                 <Button
-                  onClick={() => handleFollow(user._id)}
                   className=""
-                  isLoading={isPending}
                   color="primary"
+                  isLoading={isPending}
                   radius="full"
                   size="sm"
+                  onClick={() => handleFollow(user._id)}
                 >
                   Follow
                 </Button>

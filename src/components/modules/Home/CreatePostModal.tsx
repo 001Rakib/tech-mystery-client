@@ -1,4 +1,10 @@
+// @ts-nocheck
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/alt-text */
 "use client";
+import { useRef, useState } from "react";
 import { Button } from "@nextui-org/button";
 import {
   Modal,
@@ -8,128 +14,71 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/modal";
-import { WriteLogo } from "../../icons";
-import { ChangeEvent, useState } from "react";
-import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
+import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { Input, Textarea } from "@nextui-org/input";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { Select, SelectItem } from "@nextui-org/select";
+import { Checkbox } from "@nextui-org/checkbox";
+import { Editor, IAllProps } from "@tinymce/tinymce-react";
+import { Image } from "@nextui-org/image";
+
 import { uploadImage } from "@/src/utils/uploadImage";
 import { useCreatePost } from "@/src/hooks/post.hook";
 import { useUser } from "@/src/context/user.provider";
-import { Select, SelectItem } from "@nextui-org/select";
 import { categoryField } from "@/src/constant";
-import { Checkbox } from "@nextui-org/checkbox";
-import Loading from "../../UI/Loading";
 
-const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
+import Loading from "../../UI/Loading";
+import { WriteLogo } from "../../icons";
+
+interface EditorInstance {
+  getContent: () => string;
+}
 
 export default function CreatePostModal() {
   const { register, handleSubmit, reset } = useForm();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [content, setContent] = useState("");
   const { user } = useUser();
   const { mutate: createPost, isPending } = useCreatePost();
+  const [content, setContent] = useState("");
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
+  const editorRef = useRef<EditorInstance | null>(null);
 
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, 4, 5, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link"],
-      [{ align: [] }],
-      [
-        {
-          color: [
-            "#000000",
-            "#e60000",
-            "#ff9900",
-            "#ffff00",
-            "#008a00",
-            "#0066cc",
-            "#9933ff",
-            "#ffffff",
-            "#facccc",
-            "#ffebcc",
-            "#ffffcc",
-            "#cce8cc",
-            "#cce0f5",
-            "#ebd6ff",
-            "#bbbbbb",
-            "#f06666",
-            "#ffc266",
-            "#ffff66",
-            "#66b966",
-            "#66a3e0",
-            "#c285ff",
-            "#888888",
-            "#a10000",
-            "#b26b00",
-            "#b2b200",
-            "#006100",
-            "#0047b2",
-            "#6b24b2",
-            "#444444",
-            "#5c0000",
-            "#663d00",
-            "#666600",
-            "#003700",
-            "#002966",
-            "#3d1466",
-          ],
-        },
-      ],
-      ["code-block"],
-      ["clean"],
-    ],
-  };
-
-  const quillFormats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "link",
-    "align",
-    "color",
-    "code-block",
-  ];
-
-  const handleEditorChange = (newContent: any) => {
-    setContent(newContent);
+  // Function to handle TinyMCE content update
+  const handleEditorInit: IAllProps["onInit"] = (evt, editor) => {
+    editorRef.current = editor;
   };
 
   const handleCreatePost: SubmitHandler<FieldValues> = async (data) => {
-    const imageUrl = await uploadImage(imageFiles[0]);
+    const imageUrl =
+      imageFiles.length > 0 ? await uploadImage(imageFiles[0]) : null;
+
+    if (editorRef.current) {
+      setContent(editorRef.current.getContent());
+    }
 
     const postData = {
       ...data,
       description: content,
-      images: imageUrl?.data.url,
+      images: imageUrl?.data?.url || "",
       author: user?._id,
     };
+
     await createPost(postData);
     reset();
+    setContent(""); // Clear content after submission
   };
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0];
 
-    setImageFiles((prev) => [...prev, file]);
-
     if (file) {
+      setImageFiles((prev) => [...prev, file]);
+
       const reader = new FileReader();
 
       reader.onloadend = () => {
         setImagePreviews((prev) => [...prev, reader.result as string]);
       };
-
       reader.readAsDataURL(file);
     }
   };
@@ -138,117 +87,141 @@ export default function CreatePostModal() {
     <>
       {isPending && <Loading />}
       <Button
-        startContent={<WriteLogo />}
-        onPress={onOpen}
-        variant="bordered"
         color="primary"
+        startContent={<WriteLogo />}
+        variant="bordered"
+        onPress={onOpen}
       >
         Create Post
       </Button>
 
       <Modal
-        size="full"
+        backdrop="blur"
         isOpen={isOpen}
-        onOpenChange={onOpenChange}
         placement="top-center"
         scrollBehavior="outside"
-        backdrop="blur"
+        size="full"
+        onOpenChange={onOpenChange}
       >
         <ModalContent>
           {(onClose) => (
-            <>
-              <form onSubmit={handleSubmit(handleCreatePost)}>
-                <ModalHeader className="flex flex-col gap-1">
-                  Create Post
-                </ModalHeader>
-                <ModalBody>
-                  <div className="h-full">
-                    <Input
-                      isRequired
-                      type="text"
-                      label="Title"
-                      className="w-full mb-2"
-                      {...register("title")}
-                    />
-                    <Textarea
-                      isRequired
-                      {...register("shortDescription")}
-                      label="Short Description"
-                      placeholder="Enter your description"
-                      className="w-full mb-2"
-                    />
+            <form onSubmit={handleSubmit(handleCreatePost)}>
+              <ModalHeader className="flex flex-col gap-1">
+                Create Post
+              </ModalHeader>
+              <ModalBody>
+                <Input
+                  isRequired
+                  className="w-full mb-2"
+                  label="Title"
+                  type="text"
+                  {...register("title")}
+                />
+                <Textarea
+                  isRequired
+                  {...register("shortDescription")}
+                  className="w-full mb-2"
+                  label="Short Description"
+                  placeholder="Enter your description"
+                />
+                <Select
+                  label="Category"
+                  placeholder="Select Category"
+                  {...register("category")}
+                >
+                  {categoryField.map((item) => (
+                    <SelectItem key={item.key}>{item.label}</SelectItem>
+                  ))}
+                </Select>
 
-                    <div className="flex gap-5">
-                      <Select
-                        label="Category"
-                        placeholder="Select Category"
-                        className=""
-                        {...register("category")}
+                <label
+                  className="flex h-14 w-full cursor-pointer items-center justify-center rounded-xl border-2 border-default-200 text-default-500 shadow-sm transition-all duration-100 hover:border-default-400 mt-2"
+                  htmlFor="image"
+                >
+                  Upload Photo
+                </label>
+                <input
+                  required
+                  className="hidden"
+                  id="image"
+                  type="file"
+                  onChange={handleImageChange}
+                />
+
+                {imagePreviews.length > 0 && (
+                  <div className="flex gap-5 my-5 flex-wrap">
+                    {imagePreviews.map((imageDataUrl) => (
+                      <div
+                        key={imageDataUrl}
+                        className="relative size-48 rounded-xl border-2 border-dashed border-default-300 p-2"
                       >
-                        {categoryField.map((item) => (
-                          <SelectItem key={item.key}>{item.label}</SelectItem>
-                        ))}
-                      </Select>
-                    </div>
-                    <label
-                      className="flex h-14 w-full cursor-pointer items-center justify-center rounded-xl border-2 border-default-200 text-default-500 shadow-sm transition-all duration-100 hover:border-default-400 mt-2"
-                      htmlFor="image"
-                    >
-                      Upload Photo
-                    </label>
-                    <input
-                      className="hidden"
-                      id="image"
-                      type="file"
-                      onChange={(e) => handleImageChange(e)}
-                    />
-
-                    {imagePreviews.length > 0 && (
-                      <div className="flex gap-5 my-5 flex-wrap">
-                        {imagePreviews.map((imageDataUrl) => (
-                          <div
-                            key={imageDataUrl}
-                            className="relative size-48 rounded-xl border-2 border-dashed border-default-300 p-2"
-                          >
-                            <img
-                              alt="item"
-                              className="h-full w-full object-cover object-center rounded-md"
-                              src={imageDataUrl}
-                            />
-                          </div>
-                        ))}
+                        <Image
+                          alt="item"
+                          className="h-full w-full object-cover object-center rounded-md"
+                          src={imageDataUrl}
+                        />
                       </div>
-                    )}
-
-                    <div className="h-full">
-                      <label>Description</label>
-                      <QuillEditor
-                        value={content}
-                        onChange={handleEditorChange}
-                        modules={quillModules}
-                        formats={quillFormats}
-                        className="w-full h-[70%]  bg-white"
-                      />
-                    </div>
+                    ))}
                   </div>
-                  <Checkbox
-                    isDisabled={!user?.isPremiumMember}
-                    {...register("isPremium")}
-                    size="md"
-                  >
-                    Post as Premium Content (only for Premium Member)
-                  </Checkbox>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="flat" onPress={onClose}>
-                    Discard Post
-                  </Button>
-                  <Button type="submit" color="primary" onPress={onClose}>
-                    Post
-                  </Button>
-                </ModalFooter>
-              </form>
-            </>
+                )}
+
+                <div className="h-full">
+                  <label>Description</label>
+                  {/* // @ts-ignore */}
+                  <Editor
+                    apiKey="kt1assz7z4seywy42wxjnla1vh604njk9iz95k31qd3o7tky"
+                    init={{
+                      height: 500,
+                      menubar: false,
+                      plugins: [
+                        "advlist",
+                        "autolink",
+                        "lists",
+                        "link",
+                        "image",
+                        "charmap",
+                        "preview",
+                        "anchor",
+                        "searchreplace",
+                        "visualblocks",
+                        "code",
+                        "fullscreen",
+                        "insertdatetime",
+                        "media",
+                        "table",
+                        "code",
+                        "help",
+                        "wordcount",
+                      ],
+                      toolbar:
+                        "undo redo | blocks | " +
+                        "bold italic forecolor | alignleft aligncenter " +
+                        "alignright alignjustify | bullist numlist outdent indent | " +
+                        "removeformat | help",
+                      content_style:
+                        "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                    }}
+                    onInit={handleEditorInit}
+                  />
+                </div>
+
+                <Checkbox
+                  isDisabled={!user?.isPremiumMember}
+                  {...register("isPremium")}
+                  size="md"
+                >
+                  Post as Premium Content (only for Premium Member)
+                </Checkbox>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="flat" onPress={onClose}>
+                  Discard Post
+                </Button>
+                <Button color="primary" type="submit" onPress={onClose}>
+                  Post
+                </Button>
+              </ModalFooter>
+            </form>
           )}
         </ModalContent>
       </Modal>

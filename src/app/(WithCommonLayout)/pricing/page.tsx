@@ -1,9 +1,10 @@
 "use client";
-import { useUser } from "@/src/context/user.provider";
-import { useMakePayment } from "@/src/hooks/payment.hook";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { useEffect, useState } from "react";
+
+import { useMakePayment } from "@/src/hooks/payment.hook";
+import { useUser } from "@/src/context/user.provider";
 
 const Pricing = () => {
   const { user } = useUser();

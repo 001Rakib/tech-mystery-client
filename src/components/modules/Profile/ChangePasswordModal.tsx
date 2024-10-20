@@ -1,4 +1,3 @@
-import { useChangePassword } from "@/src/hooks/auth.hook";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import {
@@ -12,6 +11,8 @@ import {
 import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
+import { useChangePassword } from "@/src/hooks/auth.hook";
+
 const ChangePasswordModal = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [errorMsg, setErrorMsg] = useState("");
@@ -21,6 +22,7 @@ const ChangePasswordModal = () => {
   const handleChangePassword: SubmitHandler<FieldValues> = (data) => {
     if (data.newPassword !== data.newPassword2) {
       setErrorMsg("Password do not matched");
+
       return;
     }
 
@@ -28,13 +30,14 @@ const ChangePasswordModal = () => {
       oldPassword: data.oldPassword,
       newPassword: data.newPassword,
     };
+
     changePassword(passChangeData);
     reset();
   };
 
   return (
     <div>
-      <Button onPress={onOpen} size="sm" variant="bordered" color="primary">
+      <Button color="primary" size="sm" variant="bordered" onPress={onOpen}>
         Change Password
       </Button>
       <Modal
@@ -84,8 +87,8 @@ const ChangePasswordModal = () => {
                   Cancel
                 </Button>
                 <Button
-                  isLoading={isPending}
                   color="primary"
+                  isLoading={isPending}
                   type="submit"
                   variant="flat"
                 >

@@ -1,3 +1,5 @@
+import { Image } from "@nextui-org/image";
+
 export default function AboutPage() {
   return (
     <div className="max-w-7xl mx-auto p-4 pt-6 md:p-6 ">
@@ -23,37 +25,37 @@ export default function AboutPage() {
         </h2>
         <div className="flex flex-wrap -mx-4">
           <div className="w-1/2 md:w-1/3 xl:w-1/4 p-4">
-            <img
-              src="https://plus.unsplash.com/premium_photo-1664533227571-cb18551cac82?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bWFufGVufDB8fDB8fHww"
+            <Image
               alt="Team Member 1"
               className="rounded-full w-24 h-24 mb-2"
+              src="https://plus.unsplash.com/premium_photo-1664533227571-cb18551cac82?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bWFufGVufDB8fDB8fHww"
             />
             <h3 className="text-lg font-bold text-default-700">John Doe</h3>
             <p className="text-lg text-default-700">CEO</p>
           </div>
           <div className="w-1/2 md:w-1/3 xl:w-1/4 p-4">
-            <img
-              src="https://images.unsplash.com/photo-1508341591423-4347099e1f19?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG1hbnxlbnwwfHwwfHx8MA%3D%3D"
+            <Image
               alt="Team Member 2"
               className="rounded-full w-24 h-24 mb-2"
+              src="https://images.unsplash.com/photo-1508341591423-4347099e1f19?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG1hbnxlbnwwfHwwfHx8MA%3D%3D"
             />
             <h3 className="text-lg font-bold text-default-700">Jane Smith</h3>
             <p className="text-lg text-default-700">Operations Manager</p>
           </div>
           <div className="w-1/2 md:w-1/3 xl:w-1/4 p-4">
-            <img
-              src="https://images.unsplash.com/photo-1558487661-9d4f01e2ad64?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fG1hbnxlbnwwfHwwfHx8MA%3D%3D"
+            <Image
               alt="Team Member 3"
               className="rounded-full w-24 h-24 mb-2"
+              src="https://images.unsplash.com/photo-1558487661-9d4f01e2ad64?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fG1hbnxlbnwwfHwwfHx8MA%3D%3D"
             />
             <h3 className="text-lg font-bold text-default-700">Bob Johnson</h3>
             <p className="text-lg text-default-700">Customer Service Manager</p>
           </div>
           <div className="w-1/2 md:w-1/3 xl:w-1/4 p-4">
-            <img
-              src="https://images.unsplash.com/photo-1556474835-b0f3ac40d4d1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTF8fG1hbnxlbnwwfHwwfHx8MA%3D%3D"
+            <Image
               alt="Team Member 3"
               className="rounded-full w-24 h-24 mb-2"
+              src="https://images.unsplash.com/photo-1556474835-b0f3ac40d4d1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTF8fG1hbnxlbnwwfHwwfHx8MA%3D%3D"
             />
             <h3 className="text-lg font-bold text-default-700">
               Kevin Peterson

@@ -8,12 +8,12 @@ import {
 } from "@nextui-org/dropdown";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar } from "@nextui-org/avatar";
+import { Spinner } from "@nextui-org/spinner";
 
 import { logout } from "@/src/services/AuthService";
 import { useUser } from "@/src/context/user.provider";
 import { protectedRoutes } from "@/src/constant";
 import { useGetSingleUser } from "@/src/hooks/user.hook";
-import { Spinner } from "@nextui-org/spinner";
 
 export default function NavbarAvatar() {
   const router = useRouter();

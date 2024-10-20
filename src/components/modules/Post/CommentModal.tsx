@@ -7,11 +7,13 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { CommentLogo } from "../../icons";
 import { Textarea } from "@nextui-org/input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+
 import { useUser } from "@/src/context/user.provider";
 import { useCommentONPost } from "@/src/hooks/post.hook";
+
+import { CommentLogo } from "../../icons";
 
 const CommentModal = ({ postId }: { postId: string }) => {
   const { user } = useUser();
@@ -25,6 +27,7 @@ const CommentModal = ({ postId }: { postId: string }) => {
       comment: data.comment,
       postId: postId,
     };
+
     comment(commentData);
   };
 
@@ -34,7 +37,7 @@ const CommentModal = ({ postId }: { postId: string }) => {
         <CommentLogo />
         Comment
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -45,10 +48,10 @@ const CommentModal = ({ postId }: { postId: string }) => {
                 <ModalBody>
                   <Textarea
                     isRequired
+                    className="max-w-xs"
                     label="Comment"
                     labelPlacement="outside"
                     placeholder="Enter your comment"
-                    className="max-w-xs"
                     {...register("comment")}
                   />
                 </ModalBody>
@@ -56,7 +59,7 @@ const CommentModal = ({ postId }: { postId: string }) => {
                   <Button color="danger" variant="flat" onPress={onClose}>
                     Cancel
                   </Button>
-                  <Button type="submit" color="primary" onPress={onClose}>
+                  <Button color="primary" type="submit" onPress={onClose}>
                     Post
                   </Button>
                 </ModalFooter>

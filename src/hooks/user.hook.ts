@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FieldValues } from "react-hook-form";
+import { toast } from "sonner";
+import axios from "axios";
+
 import {
   deleteUser,
   followUser,
@@ -7,15 +10,14 @@ import {
   getSingleUser,
   updateUser,
 } from "../services/User";
-import { toast } from "sonner";
 import { useUser } from "../context/user.provider";
-import axios from "axios";
 
 export const useGetSingleUser = (id: string) => {
   return useQuery({
     queryKey: ["S_USER"],
     queryFn: async () => {
       const response = await getSingleUser(id);
+
       return response.data; // Return the data from the response
     },
   });
@@ -25,6 +27,7 @@ export const useGetAllUser = () => {
     queryKey: ["USER"],
     queryFn: async () => {
       const response = await getAllUser();
+
       return response.data; // Return the data from the response
     },
   });
@@ -34,8 +37,9 @@ export const useGetUserToFollow = (id: string) => {
     queryKey: ["FOLLOW"],
     queryFn: async () => {
       const response = await axios.get(
-        `http://localhost:5000/api/follow?id=${id}`
+        `https://a6-tech-tips-server.vercel.app/api/follow?id=${id}`,
       );
+
       return response.data; // Return the data from the response
     },
   });
@@ -45,6 +49,7 @@ export const useUpdateUser = () => {
   const { user } = useUser();
 
   const queryClient = useQueryClient();
+
   return useMutation<any, Error, FieldValues, string>({
     mutationKey: ["S_USER"],
     mutationFn: async (updateData) =>
@@ -60,6 +65,7 @@ export const useUpdateUser = () => {
 };
 export const useUpdateUserStatus = (id: string) => {
   const queryClient = useQueryClient();
+
   return useMutation<any, Error, FieldValues, string>({
     mutationKey: ["USER"],
     mutationFn: async (updateData) => await updateUser(updateData, id),
@@ -76,6 +82,7 @@ export const useUpdateUserStatus = (id: string) => {
 };
 export const useFollowUser = () => {
   const queryClient = useQueryClient();
+
   return useMutation<any, Error, FieldValues>({
     mutationKey: ["FOLLOW"],
     mutationFn: async (followData) => await followUser(followData),

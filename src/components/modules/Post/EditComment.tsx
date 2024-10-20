@@ -7,11 +7,11 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { CommentLogo } from "../../icons";
 import { Textarea } from "@nextui-org/input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+
 import { useUser } from "@/src/context/user.provider";
-import { useCommentONPost, useEditComment } from "@/src/hooks/post.hook";
+import { useEditComment } from "@/src/hooks/post.hook";
 
 const EditCommentModal = ({
   commentId,
@@ -34,22 +34,23 @@ const EditCommentModal = ({
       commentId,
       postId,
     };
+
     editComment(commentData);
   };
 
   return (
     <>
       <Button
-        isLoading={isPending}
-        variant="light"
-        size="sm"
-        color="primary"
         className="px-0 py-0"
+        color="primary"
+        isLoading={isPending}
+        size="sm"
+        variant="light"
         onPress={onOpen}
       >
         Edit Comment
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -60,10 +61,10 @@ const EditCommentModal = ({
                 <ModalBody>
                   <Textarea
                     isRequired
+                    className="max-w-xs"
+                    defaultValue={comment}
                     label="Comment"
                     labelPlacement="outside"
-                    defaultValue={comment}
-                    className="max-w-xs"
                     {...register("comment")}
                   />
                 </ModalBody>
@@ -71,7 +72,7 @@ const EditCommentModal = ({
                   <Button color="danger" variant="flat" onPress={onClose}>
                     Cancel
                   </Button>
-                  <Button type="submit" color="primary" onPress={onClose}>
+                  <Button color="primary" type="submit" onPress={onClose}>
                     Post
                   </Button>
                 </ModalFooter>

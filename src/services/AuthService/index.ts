@@ -1,27 +1,36 @@
 "use server";
 
-import axiosInstance from "@/src/lib/Axios";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { FieldValues } from "react-hook-form";
+import axios from "axios";
+
+import axiosInstance from "@/src/lib/Axios";
 
 export const registerUser = async (userData: FieldValues) => {
   try {
-    const { data } = await axiosInstance.post("/auth/signup", userData);
+    const { data } = await axios.post(
+      "https://a6-tech-tips-server.vercel.app/api/auth/signup",
+      userData,
+    );
 
     return data;
   } catch (err: any) {
-    console.log(err);
     throw new Error(err);
   }
 };
 export const loginUser = async (userData: FieldValues) => {
   try {
-    const { data } = await axiosInstance.post("/auth/login", userData);
+    const { data } = await axios.post(
+      "https://a6-tech-tips-server.vercel.app/api/auth/login",
+      userData,
+    );
+
     if (data?.success) {
       cookies().set("accessToken", data?.data?.accessToken);
       cookies().set("refreshToken", data?.data?.refreshToken);
     }
+
     return data;
   } catch (err: any) {
     throw new Error(err);
@@ -35,14 +44,13 @@ export const logout = () => {
 
 export const changePassword = async (newPassData: FieldValues) => {
   try {
-    const { data } = await axiosInstance.patch(
-      "/auth/user/change-password",
-      newPassData
+    const { data } = await axios.patch(
+      "https://a6-tech-tips-server.vercel.app/api/auth/user/change-password",
+      newPassData,
     );
 
     return data;
   } catch (err: any) {
-    console.log(err);
     throw new Error(err);
   }
 };

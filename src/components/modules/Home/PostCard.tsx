@@ -1,13 +1,14 @@
 "use client";
-import { useUser } from "@/src/context/user.provider";
-import { IPost } from "@/src/types";
 import { Avatar } from "@nextui-org/avatar";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import Link from "next/link";
 import { Chip } from "@nextui-org/chip";
+
+import { IPost } from "@/src/types";
+import { useUser } from "@/src/context/user.provider";
+
 import { LockLogo, VerifiedLogo } from "../../icons";
-import { Button } from "@nextui-org/button";
 import EditPostModal from "../Post/EditPostModal";
 import DeletePostModal from "../Post/DeletePostModal";
 
@@ -90,9 +91,9 @@ const PostCard = ({ post }: { post: IPost }) => {
                       key={image}
                       alt="Post image"
                       className="object-cover rounded-xl mb-4 w-full h-auto"
-                      width="100%"
                       height="auto"
                       src={image}
+                      width="100%"
                     />
                   ))}
                 </div>

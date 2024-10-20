@@ -1,9 +1,11 @@
 "use client";
-import { useUpVotePost } from "@/src/hooks/post.hook";
 import { Button } from "@nextui-org/button";
-import { useUser } from "@/src/context/user.provider";
 import { toast } from "sonner";
+
+import { useUpVotePost } from "@/src/hooks/post.hook";
+import { useUser } from "@/src/context/user.provider";
 import { IPost } from "@/src/types";
+
 import { UpLogo } from "../../icons";
 
 const UpVote = ({ data }: { data: IPost }) => {
@@ -20,13 +22,14 @@ const UpVote = ({ data }: { data: IPost }) => {
       postId: data?._id,
       user: user?._id,
     };
-    // console.log(upVoteData);
+    // (upVoteData);
 
     upVote(upVoteData);
   };
 
   return (
     <Button
+      isLoading={isPending}
       onClick={() =>
         user?.email !== data?.author?.email
           ? handleUpVotePost()
@@ -34,7 +37,6 @@ const UpVote = ({ data }: { data: IPost }) => {
               position: "top-center",
             })
       }
-      isLoading={isPending}
     >
       <UpLogo />
       {data?.upVote?.length} votes

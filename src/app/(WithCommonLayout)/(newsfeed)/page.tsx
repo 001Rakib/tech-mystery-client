@@ -1,4 +1,10 @@
 "use client";
+import { Chip } from "@nextui-org/chip";
+import { Input } from "@nextui-org/input";
+import { Spinner } from "@nextui-org/spinner";
+import { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 import { SearchIcon } from "@/src/components/icons";
 import FollowUserList from "@/src/components/modules/Home/FollowUserList";
 import PostCard from "@/src/components/modules/Home/PostCard";
@@ -6,11 +12,6 @@ import { categoryField } from "@/src/constant";
 import useDebounce from "@/src/hooks/debounce.hook";
 import { useGetPosts } from "@/src/hooks/post.hook";
 import { IPost } from "@/src/types";
-import { Chip } from "@nextui-org/chip";
-import { Input } from "@nextui-org/input";
-import { Spinner } from "@nextui-org/spinner";
-import { useEffect, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const NewsFeed = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -83,7 +84,7 @@ const NewsFeed = () => {
               onClick={() => {
                 setPage(1);
                 setFilterCategory(
-                  category.key === FilterCategory ? "" : category.key
+                  category.key === FilterCategory ? "" : category.key,
                 );
               }}
             >
@@ -96,14 +97,14 @@ const NewsFeed = () => {
       {isLoading && page === 1 && <Spinner size="md" />}
       <InfiniteScroll
         dataLength={allPosts.length}
-        next={fetchMoreData}
-        hasMore={!!posts?.length}
-        loader={<Spinner size="md" />}
         endMessage={
           <p className="font-semibold text-default-700 text-xl">
             No more posts to show
           </p>
         }
+        hasMore={!!posts?.length}
+        loader={<Spinner size="md" />}
+        next={fetchMoreData}
       >
         <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-4 my-4">
           <div className="col-span-2">

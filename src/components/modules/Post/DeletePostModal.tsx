@@ -1,5 +1,3 @@
-import { DangerIcon, DeleteIcon } from "@/src/components/icons";
-import { useDeletePost } from "@/src/hooks/post.hook";
 import { Button } from "@nextui-org/button";
 import {
   Modal,
@@ -9,6 +7,9 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
+
+import { DangerIcon } from "@/src/components/icons";
+import { useDeletePost } from "@/src/hooks/post.hook";
 
 const DeletePostModal = ({ id }: { id: string }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -20,15 +21,15 @@ const DeletePostModal = ({ id }: { id: string }) => {
 
   return (
     <>
-      <Button size="sm" color="danger" variant="light" onPress={onOpen}>
+      <Button color="danger" size="sm" variant="light" onPress={onOpen}>
         Delete Post
       </Button>
 
       <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        placement="top-center"
         backdrop="blur"
+        isOpen={isOpen}
+        placement="top-center"
+        onOpenChange={onOpenChange}
       >
         <ModalContent>
           {(onClose) => (
@@ -47,8 +48,8 @@ const DeletePostModal = ({ id }: { id: string }) => {
 
                   <Button
                     className="px-10 w-full"
-                    isLoading={isPending}
                     color="danger"
+                    isLoading={isPending}
                     variant="flat"
                     onClick={() => handleDeleteUser()}
                   >

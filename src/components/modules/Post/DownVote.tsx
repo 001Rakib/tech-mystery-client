@@ -1,10 +1,12 @@
 "use client";
-import { useDownVotePost } from "@/src/hooks/post.hook";
 import { Button } from "@nextui-org/button";
-import { DownLogo } from "../../icons";
-import { useUser } from "@/src/context/user.provider";
 import { toast } from "sonner";
+
+import { useUser } from "@/src/context/user.provider";
+import { useDownVotePost } from "@/src/hooks/post.hook";
 import { IPost } from "@/src/types";
+
+import { DownLogo } from "../../icons";
 
 const DownVote = ({ data }: { data: IPost }) => {
   const { user } = useUser();
@@ -26,6 +28,7 @@ const DownVote = ({ data }: { data: IPost }) => {
 
   return (
     <Button
+      isLoading={isPending}
       onClick={() =>
         user?.email !== data?.author?.email
           ? handleDownVotePost()
@@ -33,7 +36,6 @@ const DownVote = ({ data }: { data: IPost }) => {
               position: "top-center",
             })
       }
-      isLoading={isPending}
     >
       <DownLogo />
       {data?.downVote?.length} votes

@@ -1,5 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FieldValues } from "react-hook-form";
+import { toast } from "sonner";
+import axios from "axios";
+import qs from "qs";
+
 import {
   commentOnPost,
   createPost,
@@ -10,12 +14,10 @@ import {
   editPost,
   upVotePost,
 } from "../services/Posts";
-import { toast } from "sonner";
-import axios from "axios";
-import qs from "qs";
 
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
+
   return useMutation<any, Error, FieldValues>({
     mutationKey: ["ALL_POSTS"],
     mutationFn: async (postData) => await createPost(postData),
@@ -24,13 +26,14 @@ export const useCreatePost = () => {
       queryClient.invalidateQueries({ queryKey: ["ALL_POSTS"] });
     },
     onError: (error) => {
-      console.log(error);
+      error;
       toast.error(error.message, { position: "top-center" });
     },
   });
 };
 export const useEditPost = () => {
   const queryClient = useQueryClient();
+
   return useMutation<any, Error, FieldValues>({
     mutationKey: ["ALL_POSTS"],
     mutationFn: async (postData) => await editPost(postData),
@@ -39,13 +42,14 @@ export const useEditPost = () => {
       queryClient.invalidateQueries({ queryKey: ["POSTS"] });
     },
     onError: (error) => {
-      console.log(error);
+      error;
       toast.error(error.message, { position: "top-center" });
     },
   });
 };
 export const useDeletePost = () => {
   const queryClient = useQueryClient();
+
   return useMutation<any, Error, string>({
     mutationKey: ["ALL_POSTS"],
     mutationFn: async (id) => await deletePost(id),
@@ -54,13 +58,14 @@ export const useDeletePost = () => {
       queryClient.invalidateQueries({ queryKey: ["POSTS"] });
     },
     onError: (error) => {
-      console.log(error);
+      error;
       toast.error(error.message, { position: "top-center" });
     },
   });
 };
 export const useUpVotePost = () => {
   const queryClient = useQueryClient();
+
   return useMutation<any, Error, FieldValues>({
     mutationKey: ["POSTS"],
     mutationFn: async (upVoteData) => await upVotePost(upVoteData),
@@ -75,6 +80,7 @@ export const useUpVotePost = () => {
 };
 export const useDownVotePost = () => {
   const queryClient = useQueryClient();
+
   return useMutation<any, Error, FieldValues>({
     mutationKey: ["POSTS"],
     mutationFn: async (downVoteData) => await downVotePost(downVoteData),
@@ -89,6 +95,7 @@ export const useDownVotePost = () => {
 };
 export const useCommentONPost = () => {
   const queryClient = useQueryClient();
+
   return useMutation<any, Error, FieldValues>({
     mutationKey: ["POSTS"],
     mutationFn: async (commentData) => await commentOnPost(commentData),
@@ -104,6 +111,7 @@ export const useCommentONPost = () => {
 };
 export const useEditComment = () => {
   const queryClient = useQueryClient();
+
   return useMutation<any, Error, FieldValues>({
     mutationKey: ["POSTS"],
     mutationFn: async (commentData) => await editComment(commentData),
@@ -118,6 +126,7 @@ export const useEditComment = () => {
 };
 export const useDeleteComment = () => {
   const queryClient = useQueryClient();
+
   return useMutation<any, Error, FieldValues>({
     mutationKey: ["POSTS"],
     mutationFn: async (deleteData) => await deleteComment(deleteData),
@@ -130,6 +139,7 @@ export const useDeleteComment = () => {
     },
   });
 };
+
 export const useGetPosts = (query: {
   category?: string;
   author?: string;
@@ -150,7 +160,7 @@ export const useGetPosts = (query: {
       });
 
       const response = await axios.get(
-        `http://localhost:5000/api/posts${queryString}`
+        `https://a6-tech-tips-server.vercel.app/api/posts${queryString}`,
       );
 
       return response.data.data;

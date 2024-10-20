@@ -1,22 +1,22 @@
 "use client";
 
-import Loading from "@/src/components/UI/Loading";
-import { useUser } from "@/src/context/user.provider";
-import { useUserLogin } from "@/src/hooks/auth.hook";
 import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { Input } from "@nextui-org/input";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
+import { useUserLogin } from "@/src/hooks/auth.hook";
+import { useUser } from "@/src/context/user.provider";
+import Loading from "@/src/components/UI/Loading";
+
 const Login = () => {
-  const searchParams = useSearchParams();
   const { register, handleSubmit } = useForm();
   const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
   const router = useRouter();
-  const redirect = searchParams.get("redirect");
+
   const { setIsLoading } = useUser();
 
   const handleLogin: SubmitHandler<FieldValues> = async (data) => {
@@ -26,11 +26,7 @@ const Login = () => {
 
   useEffect(() => {
     if (!isPending && isSuccess) {
-      if (redirect) {
-        router.push(redirect);
-      } else {
-        router.push("/");
-      }
+      router.push("/");
     }
   }, [isPending, isSuccess]);
 
@@ -47,32 +43,32 @@ const Login = () => {
           <form onSubmit={handleSubmit(handleLogin)}>
             <Input
               isRequired
-              type="email"
-              label="Email"
               className="max-w-xs"
               errorMessage="Please enter a valid email"
+              label="Email"
+              type="email"
               {...register("email")}
             />
             <Input
               isRequired
-              type="password"
-              label="Password"
               className="max-w-xs"
               errorMessage="Incorrect password"
+              label="Password"
+              type="password"
               {...register("password")}
             />
             <Button
               className="mt-4"
               color="primary"
-              variant="shadow"
               type="submit"
+              variant="shadow"
             >
               Login
             </Button>
           </form>
           <Divider className="my-4" />
           <div>
-            <h1 className="my-2">Don't have any account?</h1>
+            <h1 className="my-2">Don&apos;t have any account?</h1>
             <Link href={"/register"}>
               <Button color="primary" variant="light">
                 Register Now

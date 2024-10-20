@@ -1,28 +1,42 @@
-import envConfig from "@/src/config/envConfig";
-import { getNewAccessToken } from "@/src/services/AuthService";
 import axios from "axios";
-import { cookies } from "next/headers";
+import Cookies from "js-cookie"; // For client-side cookies
+import { cookies } from "next/headers"; // For server-side cookies
 
+import { getNewAccessToken } from "@/src/services/AuthService";
+
+// Create axios instance
 const axiosInstance = axios.create({
-  baseURL: envConfig.baseApi,
+  baseURL: "https://a6-tech-tips-server.vercel.app", // Update to your backend URL
 });
 
+// Interceptor to add Authorization header before sending the request
 axiosInstance.interceptors.request.use(
   function (config) {
-    const cookieStore = cookies();
-    const accessToken = cookieStore.get("accessToken")?.value;
+    if (typeof window === "undefined") {
+      // Server-side
+      const cookieStore = cookies();
+      const accessToken = cookieStore.get("accessToken")?.value;
 
-    if (accessToken) {
-      config.headers.Authorization = accessToken;
+      if (accessToken) {
+        config.headers.Authorization = accessToken; // No Bearer prefix
+      }
+    } else {
+      // Client-side
+      const accessToken = Cookies.get("accessToken");
+
+      if (accessToken) {
+        config.headers.Authorization = accessToken; // No Bearer prefix
+      }
     }
 
     return config;
   },
   function (error) {
     return Promise.reject(error);
-  }
+  },
 );
 
+// Interceptor to handle token refresh on 401 responses
 axiosInstance.interceptors.response.use(
   function (response) {
     return response;
@@ -30,19 +44,27 @@ axiosInstance.interceptors.response.use(
   async function (error) {
     const config = error.config;
 
+    // If the error is 401 (Unauthorized) and request has not been retried yet
     if (error?.response?.status === 401 && !config?.sent) {
       config.sent = true;
+
+      // Get a new access token
       const res = await getNewAccessToken();
-      const accessToken = res.data.accessToken;
+      const newAccessToken = res.data.accessToken;
 
-      config.headers["Authorization"] = accessToken;
-      cookies().set("accessToken", accessToken);
+      // Set the new token - client-side
+      if (typeof window !== "undefined") {
+        Cookies.set("accessToken", newAccessToken);
+      }
 
-      return axiosInstance(config);
+      // Re-try the original request with the new token
+      config.headers["Authorization"] = newAccessToken; // No Bearer prefix
+
+      return axiosInstance(config); // Retry request with updated config
     } else {
       return Promise.reject(error);
     }
-  }
+  },
 );
 
 export default axiosInstance;

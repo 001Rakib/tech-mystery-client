@@ -9,13 +9,15 @@ import {
 import { Avatar } from "@nextui-org/avatar";
 import { Chip } from "@nextui-org/chip";
 import { format } from "date-fns";
+import { Spinner } from "@nextui-org/spinner";
+
 import { useGetAllUser } from "@/src/hooks/user.hook";
 import { IUserResponse } from "@/src/types";
-import { Spinner } from "@nextui-org/spinner";
 import { VerifiedLogo } from "@/src/components/icons";
+import Loading from "@/src/components/UI/Loading";
+
 import EditUserStatusModal from "./EditUserStatusModal";
 import DeleteUserModal from "./DeleteUserModal";
-import Loading from "@/src/components/UI/Loading";
 
 const ManageUsers = () => {
   const { data, isLoading } = useGetAllUser();

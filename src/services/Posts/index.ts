@@ -1,13 +1,17 @@
 "use server";
-import axiosInstance from "@/src/lib/Axios";
 import axios from "axios";
 import { revalidateTag } from "next/cache";
 import { FieldValues } from "react-hook-form";
 
 export const createPost = async (postData: FieldValues) => {
   try {
-    const { data } = await axiosInstance.post("/posts", postData);
+    const { data } = await axios.post(
+      "https://a6-tech-tips-server.vercel.app/api/posts",
+      postData,
+    );
+
     revalidateTag("ALL_POSTS");
+
     return data;
   } catch (err: any) {
     throw new Error(err);
@@ -15,107 +19,100 @@ export const createPost = async (postData: FieldValues) => {
 };
 export const editPost = async (postData: FieldValues) => {
   try {
-    const { data } = await axiosInstance.patch(
-      `/posts/${postData.id}`,
-      postData
+    const { data } = await axios.patch(
+      `https://a6-tech-tips-server.vercel.app/api/posts/${postData.id}`,
+      postData,
     );
+
     return data;
   } catch (err: any) {
-    console.log(err);
     throw new Error(err);
   }
 };
 export const deletePost = async (id: string) => {
   try {
-    const { data } = await axiosInstance.delete(`/posts/${id}`);
+    const { data } = await axios.delete(
+      `https://a6-tech-tips-server.vercel.app/api/posts/${id}`,
+    );
+
     return data;
   } catch (err: any) {
-    console.log(err);
     throw new Error(err);
   }
 };
 export const upVotePost = async (upVoteData: FieldValues) => {
   try {
     const { data } = await axios.patch(
-      "http://localhost:5000/api/posts/upVote",
-      upVoteData
+      "https://a6-tech-tips-server.vercel.app/api/posts/upVote",
+      upVoteData,
     );
 
     return data;
   } catch (err: any) {
-    console.log(err);
     throw new Error(err);
   }
 };
 export const downVotePost = async (downVoteData: FieldValues) => {
   try {
     const { data } = await axios.patch(
-      "http://localhost:5000/api/posts/downVote",
-      downVoteData
+      "https://a6-tech-tips-server.vercel.app/api/posts/downVote",
+      downVoteData,
     );
 
     return data;
   } catch (err: any) {
-    console.log(err);
     throw new Error(err);
   }
 };
 export const commentOnPost = async (commentData: FieldValues) => {
   try {
     const { data } = await axios.put(
-      "http://localhost:5000/api/posts/comment",
-      commentData
+      "https://a6-tech-tips-server.vercel.app/api/posts/comment",
+      commentData,
     );
 
     return data;
   } catch (err: any) {
-    console.log(err);
     throw new Error(err);
   }
 };
 export const editComment = async (commentData: FieldValues) => {
   try {
     const { data } = await axios.patch(
-      "http://localhost:5000/api/posts/edit-comment",
-      commentData
+      "https://a6-tech-tips-server.vercel.app/api/posts/edit-comment",
+      commentData,
     );
 
     return data;
   } catch (err: any) {
-    console.log(err);
     throw new Error(err);
   }
 };
 export const deleteComment = async (deleteData: FieldValues) => {
   try {
     const { data } = await axios.delete(
-      `http://localhost:5000/api/posts/delete-comment`,
+      `https://a6-tech-tips-server.vercel.app/api/posts/delete-comment`,
       {
         params: deleteData,
-      }
+      },
     );
 
     return data;
   } catch (err: any) {
-    console.log(err);
     throw new Error(err);
   }
 };
 export const getSinglePost = async (postId: string) => {
-  const res = await fetch(`http://localhost:5000/api/posts/${postId}`, {
-    next: { tags: ["POST_ID"] },
-  });
+  const res = await fetch(
+    `https://a6-tech-tips-server.vercel.app/api/posts/${postId}`,
+    {
+      next: { tags: ["POST_ID"] },
+    },
+  );
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
-
-  return res.json();
-};
-export const getPosts = async () => {
-  const res = await fetch("http://localhost:5000/api/posts", {
-    next: { tags: ["All_POSTS"] },
-  });
 
   return res.json();
 };

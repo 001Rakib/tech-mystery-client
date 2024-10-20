@@ -7,7 +7,6 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { ShareLogo } from "../../icons";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -19,6 +18,8 @@ import {
   WhatsappIcon,
 } from "react-share";
 
+import { ShareLogo } from "../../icons";
+
 interface PostShareProps {
   postUrl: string;
   postTitle: string;
@@ -26,12 +27,13 @@ interface PostShareProps {
 
 const SharePost = ({ postUrl, postTitle }: PostShareProps) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   return (
     <>
       <Button onPress={onOpen}>
         <ShareLogo /> Share
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -41,23 +43,23 @@ const SharePost = ({ postUrl, postTitle }: PostShareProps) => {
                   <h3>Share this post:</h3>
                   <div className="share-buttons flex gap-2 my-2">
                     {/* Facebook Share Button */}
-                    <FacebookShareButton url={postUrl} title={postTitle}>
-                      <FacebookIcon size={32} round={true} />
+                    <FacebookShareButton title={postTitle} url={postUrl}>
+                      <FacebookIcon round={true} size={32} />
                     </FacebookShareButton>
 
                     {/* Twitter Share Button */}
-                    <TwitterShareButton url={postUrl} title={postTitle}>
-                      <TwitterIcon size={32} round={true} />
+                    <TwitterShareButton title={postTitle} url={postUrl}>
+                      <TwitterIcon round={true} size={32} />
                     </TwitterShareButton>
 
                     {/* LinkedIn Share Button */}
                     <LinkedinShareButton url={postUrl}>
-                      <LinkedinIcon size={32} round={true} />
+                      <LinkedinIcon round={true} size={32} />
                     </LinkedinShareButton>
 
                     {/* WhatsApp Share Button */}
-                    <WhatsappShareButton url={postUrl} title={postTitle}>
-                      <WhatsappIcon size={32} round={true} />
+                    <WhatsappShareButton title={postTitle} url={postUrl}>
+                      <WhatsappIcon round={true} size={32} />
                     </WhatsappShareButton>
                   </div>
                 </div>

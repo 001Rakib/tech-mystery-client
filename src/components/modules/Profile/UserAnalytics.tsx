@@ -1,4 +1,3 @@
-import { IPost } from "@/src/types";
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -12,6 +11,8 @@ import {
 } from "chart.js";
 import { Spinner } from "@nextui-org/spinner";
 import { Chip } from "@nextui-org/chip";
+
+import { IPost } from "@/src/types";
 import { useUser } from "@/src/context/user.provider";
 import { useGetPosts } from "@/src/hooks/post.hook";
 

@@ -1,36 +1,32 @@
 "use client";
 
-import Loading from "@/src/components/UI/Loading";
-import { useUserSignup } from "@/src/hooks/auth.hook";
 import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { Input } from "@nextui-org/input";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+
+import { useUserSignup } from "@/src/hooks/auth.hook";
+import Loading from "@/src/components/UI/Loading";
 
 const Register = () => {
   const { register, handleSubmit } = useForm();
   const { mutate: handleUserSignup, isPending, isSuccess } = useUserSignup();
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const redirect = searchParams.get("redirect");
 
   const handleLogin: SubmitHandler<FieldValues> = async (data) => {
     const userData = {
       ...data,
     };
+
     handleUserSignup(userData);
   };
 
   useEffect(() => {
     if (!isPending && isSuccess) {
-      if (redirect) {
-        router.push(redirect);
-      } else {
-        router.push("/login");
-      }
+      router.push("/login");
     }
   }, [isPending, isSuccess]);
 
@@ -44,26 +40,26 @@ const Register = () => {
           <form onSubmit={handleSubmit(handleLogin)}>
             <Input
               isRequired
-              type="text"
-              label="Name"
               className="max-w-xs mb-2"
+              label="Name"
+              type="text"
               {...register("name")}
             />
 
             <Input
               isRequired
-              type="email"
-              label="Email"
               className="max-w-xs"
               errorMessage="Please enter a valid email"
+              label="Email"
+              type="email"
               {...register("email")}
             />
             <Input
               isRequired
-              type="password"
-              label="Password"
               className="max-w-xs"
               errorMessage="Incorrect password"
+              label="Password"
+              type="password"
               {...register("password")}
             />
 
@@ -76,8 +72,8 @@ const Register = () => {
             <Button
               className="mt-4"
               color="primary"
-              variant="shadow"
               type="submit"
+              variant="shadow"
             >
               Register
             </Button>

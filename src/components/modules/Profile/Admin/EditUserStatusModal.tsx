@@ -1,5 +1,3 @@
-import { EditIcon } from "@/src/components/icons";
-import { useUpdateUserStatus } from "@/src/hooks/user.hook";
 import { Button } from "@nextui-org/button";
 import {
   Modal,
@@ -9,7 +7,9 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { useState } from "react";
+
+import { useUpdateUserStatus } from "@/src/hooks/user.hook";
+import { EditIcon } from "@/src/components/icons";
 
 const EditUserStatusModal = ({
   id,
@@ -27,12 +27,14 @@ const EditUserStatusModal = ({
     const changeRole = {
       role: updatedRole,
     };
+
     updateUserStatus(changeRole);
   };
   const handleBlockUser = (updatedStatus: boolean) => {
     const changeStatus = {
       isBlocked: updatedStatus,
     };
+
     updateUserStatus(changeStatus);
   };
 
@@ -47,10 +49,10 @@ const EditUserStatusModal = ({
         <EditIcon />
       </div>
       <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        placement="top-center"
         backdrop="blur"
+        isOpen={isOpen}
+        placement="top-center"
+        onOpenChange={onOpenChange}
       >
         <ModalContent>
           {(onClose) => (
@@ -61,24 +63,26 @@ const EditUserStatusModal = ({
               <ModalBody>
                 <div className="w-full space-y-2">
                   <Button
-                    onClick={() => {
-                      const newRole = role === "user" ? "admin" : "user";
-                      handleChangeRole(newRole);
-                    }}
-                    isLoading={isPending}
                     className="px-10 w-full"
                     color="primary"
+                    isLoading={isPending}
                     variant="flat"
+                    onClick={() => {
+                      const newRole = role === "user" ? "admin" : "user";
+
+                      handleChangeRole(newRole);
+                    }}
                   >
                     Switch Role
                   </Button>
                   <Button
                     className="px-10 w-full"
-                    isLoading={isPending}
                     color="danger"
+                    isLoading={isPending}
                     variant="flat"
                     onClick={() => {
                       const newStatus = status === false ? true : false;
+
                       handleBlockUser(newStatus);
                     }}
                   >

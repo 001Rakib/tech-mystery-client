@@ -3,25 +3,24 @@ import {
   Navbar as NextUINavbar,
   NavbarContent,
   NavbarMenuToggle,
-  NavbarBrand,
   NavbarItem,
   NavbarMenu,
-  NavbarMenuItem,
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
-
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
+import Link from "next/link";
+import { Spinner } from "@nextui-org/spinner";
+import { useState } from "react";
 
 import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
-import Link from "next/link";
 import { useUser } from "@/src/context/user.provider";
-import NavbarAvatar from "./NavbarAvatar";
+
 import CreatePostModal from "../modules/Home/CreatePostModal";
-import { Spinner } from "@nextui-org/spinner";
-import { useState } from "react";
+
+import NavbarAvatar from "./NavbarAvatar";
 
 export const Navbar = () => {
   const { user, isLoading } = useUser();
@@ -37,14 +36,14 @@ export const Navbar = () => {
         <p className="font-bold text-inherit">NextGenTechTips</p>
       </NextLink>
       {/* for large device */}
-      <NavbarContent justify="center" className="basis-1/5 sm:basis-full">
+      <NavbarContent className="basis-1/5 sm:basis-full" justify="center">
         <ul className="hidden md:flex md:gap-4 md:justify-center md:items-center ml-2">
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
+                  "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
                 color="foreground"
                 href={item.href}
@@ -111,7 +110,7 @@ export const Navbar = () => {
             <NextLink
               className={clsx(
                 linkStyles({ color: "foreground" }),
-                "data-[active=true]:text-primary data-[active=true]:font-medium"
+                "data-[active=true]:text-primary data-[active=true]:font-medium",
               )}
               color="foreground"
               href={item.href}
