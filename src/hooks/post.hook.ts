@@ -4,6 +4,7 @@ import {
   commentOnPost,
   createPost,
   deleteComment,
+  deletePost,
   downVotePost,
   editComment,
   editPost,
@@ -35,6 +36,21 @@ export const useEditPost = () => {
     mutationFn: async (postData) => await editPost(postData),
     onSuccess: () => {
       toast.success("Post Edited successfully", { position: "top-center" });
+      queryClient.invalidateQueries({ queryKey: ["POSTS"] });
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error(error.message, { position: "top-center" });
+    },
+  });
+};
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation<any, Error, string>({
+    mutationKey: ["ALL_POSTS"],
+    mutationFn: async (id) => await deletePost(id),
+    onSuccess: () => {
+      toast.success("Post Deleted successfully", { position: "top-center" });
       queryClient.invalidateQueries({ queryKey: ["POSTS"] });
     },
     onError: (error) => {

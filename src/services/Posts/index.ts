@@ -19,7 +19,15 @@ export const editPost = async (postData: FieldValues) => {
       `/posts/${postData.id}`,
       postData
     );
-    revalidateTag("ALL_POSTS");
+    return data;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error(err);
+  }
+};
+export const deletePost = async (id: string) => {
+  try {
+    const { data } = await axiosInstance.delete(`/posts/${id}`);
     return data;
   } catch (err: any) {
     console.log(err);

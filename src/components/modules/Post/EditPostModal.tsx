@@ -8,14 +8,13 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/modal";
-import { WriteLogo } from "../../icons";
 import { ChangeEvent, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { Input, Textarea } from "@nextui-org/input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { uploadImage } from "@/src/utils/uploadImage";
-import { useCreatePost, useEditPost } from "@/src/hooks/post.hook";
+import { useEditPost } from "@/src/hooks/post.hook";
 import { useUser } from "@/src/context/user.provider";
 import { Select, SelectItem } from "@nextui-org/select";
 import { categoryField } from "@/src/constant";
@@ -115,7 +114,7 @@ export default function EditPostModal({ post }: { post: IPost }) {
 
     const postData = {
       ...data,
-      description: content,
+      description: content || post?.description,
       images: url || post.images[0],
       author: user?._id,
       category: data.category || post?.category,
@@ -225,7 +224,7 @@ export default function EditPostModal({ post }: { post: IPost }) {
                     <div className="h-full">
                       <label>Description</label>
                       <QuillEditor
-                        value={post?.description || content}
+                        value={content || post?.description}
                         onChange={handleEditorChange}
                         modules={quillModules}
                         formats={quillFormats}
