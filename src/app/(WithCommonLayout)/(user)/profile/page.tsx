@@ -1,5 +1,6 @@
 "use client";
 import { CameraIcon, VerifiedLogo } from "@/src/components/icons";
+import Analytics from "@/src/components/modules/Profile/Analytics";
 import ChangePasswordModal from "@/src/components/modules/Profile/ChangePasswordModal";
 import ManageUsers from "@/src/components/modules/Profile/ManageUsers";
 import MyFollowers from "@/src/components/modules/Profile/MyFollowers";
@@ -36,8 +37,7 @@ const Profile = () => {
           {
             id: "analytics",
             label: "Analytics",
-            content:
-              "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+            content: <Analytics />,
           },
           {
             id: "following",
@@ -141,7 +141,12 @@ const Profile = () => {
               {!data?.isPremiumMember && (
                 <Link href={"/pricing"}>
                   {" "}
-                  <Button className="my-2" variant="bordered" color="primary">
+                  <Button
+                    size="sm"
+                    className="my-2"
+                    variant="bordered"
+                    color="primary"
+                  >
                     Get Verified and Access Premium Content
                   </Button>
                 </Link>
