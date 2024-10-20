@@ -89,7 +89,7 @@ const PostDetailsPage = ({ params: { postId } }: IProps) => {
         />
 
         <div className="mt-4">
-          <ButtonGroup>
+          <ButtonGroup className="flex-wrap gap-2 lg:gap-0">
             <UpVote data={postData} />
             <DownVote data={postData} />
 

@@ -61,7 +61,7 @@ const NewsFeed = () => {
         }}
       />
 
-      <div className="my-4 flex gap-2">
+      <div className="my-4 flex gap-2 flex-wrap">
         <Chip
           className="hover:cursor-pointer"
           color={!FilterCategory ? "primary" : "default"}
@@ -105,7 +105,7 @@ const NewsFeed = () => {
           </p>
         }
       >
-        <div className="max-w-7xl mx-auto grid grid-cols-3 gap-4 my-4">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-4 my-4">
           <div className="col-span-2">
             <div className="grid gap-5">
               {allPosts?.map((post: IPost) => (

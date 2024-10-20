@@ -153,15 +153,21 @@ const Profile = () => {
               )}
             </div>
           </div>
-          <div className="my-10 grid grid-cols-3">
-            <div className="flex w-full flex-col col-span-2">
-              <Tabs aria-label="Dynamic tabs" items={tabs}>
-                {(item) => (
-                  <Tab key={item.id} title={item.label}>
-                    {item.content}
-                  </Tab>
-                )}
-              </Tabs>
+          <div className="my-10 grid lg:grid-cols-3">
+            <div className="flex flex-wrap w-full md:flex-col md:col-span-2">
+              <div className="w-full overflow-x-auto">
+                <Tabs
+                  aria-label="Dynamic tabs"
+                  items={tabs}
+                  className="flex-nowrap"
+                >
+                  {(item) => (
+                    <Tab key={item.id} title={item.label}>
+                      {item.content}
+                    </Tab>
+                  )}
+                </Tabs>
+              </div>
             </div>
           </div>
         </div>
