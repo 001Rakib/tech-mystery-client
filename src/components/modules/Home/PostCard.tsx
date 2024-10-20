@@ -7,6 +7,8 @@ import { Image } from "@nextui-org/image";
 import Link from "next/link";
 import { Chip } from "@nextui-org/chip";
 import { LockLogo, VerifiedLogo } from "../../icons";
+import { Button } from "@nextui-org/button";
+import EditPostModal from "../Post/EditPostModal";
 
 const PostCard = ({ post }: { post: IPost }) => {
   const { user } = useUser();
@@ -125,6 +127,14 @@ const PostCard = ({ post }: { post: IPost }) => {
                 </div>
               </CardBody>
             </Link>
+            {user?.email === post?.author?.email && (
+              <div>
+                <EditPostModal post={post} />
+                <Button size="sm" color="danger" variant="light">
+                  Delete
+                </Button>
+              </div>
+            )}
           </Card>
         </div>
       )}

@@ -6,6 +6,7 @@ import {
   deleteComment,
   downVotePost,
   editComment,
+  editPost,
   upVotePost,
 } from "../services/Posts";
 import { toast } from "sonner";
@@ -20,6 +21,21 @@ export const useCreatePost = () => {
     onSuccess: () => {
       toast.success("Post created successfully", { position: "top-center" });
       queryClient.invalidateQueries({ queryKey: ["ALL_POSTS"] });
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error(error.message, { position: "top-center" });
+    },
+  });
+};
+export const useEditPost = () => {
+  const queryClient = useQueryClient();
+  return useMutation<any, Error, FieldValues>({
+    mutationKey: ["ALL_POSTS"],
+    mutationFn: async (postData) => await editPost(postData),
+    onSuccess: () => {
+      toast.success("Post Edited successfully", { position: "top-center" });
+      queryClient.invalidateQueries({ queryKey: ["POSTS"] });
     },
     onError: (error) => {
       console.log(error);

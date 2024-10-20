@@ -13,6 +13,19 @@ export const createPost = async (postData: FieldValues) => {
     throw new Error(err);
   }
 };
+export const editPost = async (postData: FieldValues) => {
+  try {
+    const { data } = await axiosInstance.patch(
+      `/posts/${postData.id}`,
+      postData
+    );
+    revalidateTag("ALL_POSTS");
+    return data;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error(err);
+  }
+};
 export const upVotePost = async (upVoteData: FieldValues) => {
   try {
     const { data } = await axios.patch(
