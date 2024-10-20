@@ -2,8 +2,8 @@
 
 ## Live Deployment Link
 
-- [Ride Flex - Client](https://ride-flex-frontend.vercel.app/)
-- [Ride Flex - Server](https://ride-flex-server.vercel.app/)
+- [NextGenTechTips - Client](https://ride-flex-frontend.vercel.app/)
+- [NextGenTechTips - Server](https://ride-flex-server.vercel.app/)
 
 ## Technologies Used
 
@@ -19,11 +19,11 @@
 
 ### BackEnd
 
-- [NodeJs]
-- [ExpressJs]
-- [Mongoose]
-- [TypeScript]
-- [MongoDB]
+- [NodeJs]()
+- [ExpressJs]()
+- [Mongoose]()
+- [TypeScript]()
+- [MongoDB]()
 
 ## Features
 
