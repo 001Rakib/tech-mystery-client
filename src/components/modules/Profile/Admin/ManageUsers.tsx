@@ -6,16 +6,16 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import { DeleteIcon, EditIcon, VerifiedLogo } from "../../icons";
 import { Avatar } from "@nextui-org/avatar";
 import { Chip } from "@nextui-org/chip";
 import { format } from "date-fns";
 import { useGetAllUser } from "@/src/hooks/user.hook";
-import Loading from "../../UI/Loading";
 import { IUserResponse } from "@/src/types";
 import { Spinner } from "@nextui-org/spinner";
-import EditUserStatusModal from "./Admin/EditUserStatusModal";
-import DeleteUserModal from "./Admin/DeleteUserModal";
+import { VerifiedLogo } from "@/src/components/icons";
+import EditUserStatusModal from "./EditUserStatusModal";
+import DeleteUserModal from "./DeleteUserModal";
+import Loading from "@/src/components/UI/Loading";
 
 const ManageUsers = () => {
   const { data, isLoading } = useGetAllUser();
@@ -23,6 +23,7 @@ const ManageUsers = () => {
   return (
     <>
       {isLoading && <Loading />}
+
       {data?.length ? (
         <Table aria-label="Users table">
           <TableHeader>

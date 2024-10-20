@@ -1,12 +1,13 @@
 "use client";
 import { CameraIcon, VerifiedLogo } from "@/src/components/icons";
-import Analytics from "@/src/components/modules/Profile/Analytics";
+import Analytics from "@/src/components/modules/Profile/Admin/Analytics";
+import ManageUsers from "@/src/components/modules/Profile/Admin/ManageUsers";
 import ChangePasswordModal from "@/src/components/modules/Profile/ChangePasswordModal";
-import ManageUsers from "@/src/components/modules/Profile/ManageUsers";
 import MyFollowers from "@/src/components/modules/Profile/MyFollowers";
 import MyFollowing from "@/src/components/modules/Profile/MyFollowing";
 import MyPost from "@/src/components/modules/Profile/MyPost";
 import ProfileEditModal from "@/src/components/modules/Profile/ProfileEditModal";
+import UserAnalytics from "@/src/components/modules/Profile/UserAnalytics";
 import Loading from "@/src/components/UI/Loading";
 import { useUser } from "@/src/context/user.provider";
 import { useGetSingleUser, useUpdateUser } from "@/src/hooks/user.hook";
@@ -25,7 +26,7 @@ const Profile = () => {
   const { data, isLoading } = useGetSingleUser(user?._id as string);
 
   const { mutate: changeProfileImg, isPending } = useUpdateUser();
-
+  console.log(data);
   let tabs =
     user?.role === "admin"
       ? [
@@ -65,8 +66,7 @@ const Profile = () => {
           {
             id: "analytics",
             label: "Analytics",
-            content:
-              "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+            content: <UserAnalytics />,
           },
 
           {
