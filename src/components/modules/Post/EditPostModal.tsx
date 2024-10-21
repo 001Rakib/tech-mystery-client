@@ -42,26 +42,24 @@ export default function EditPostModal({ post }: { post: IPost }) {
   const { mutate: editPost, isPending } = useEditPost();
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
-  const [url, setUrl] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
     post?.category,
   );
-
-  // For storing the content of the TinyMCE Editor
   const [content, setContent] = useState<string>(post?.description || "");
 
-  // Handle form submission
   const handleEditPost: SubmitHandler<FieldValues> = async (data) => {
-    if (imageFiles.length) {
-      const imageUrl = await uploadImage(imageFiles[0]);
+    let imageUrl = post.images[0];
 
-      setUrl(imageUrl?.data.url);
+    if (imageFiles.length) {
+      const imageResponse = await uploadImage(imageFiles[0]);
+
+      imageUrl = imageResponse?.data?.url;
     }
 
     const postData = {
       ...data,
       description: content || post?.description,
-      images: url || post.images[0],
+      images: imageUrl || post.images[0],
       author: user?._id,
       category: selectedCategory || post?.category,
       id: post._id,
@@ -70,7 +68,6 @@ export default function EditPostModal({ post }: { post: IPost }) {
     await editPost(postData);
   };
 
-  // Handle image file changes
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0];
 
@@ -88,6 +85,9 @@ export default function EditPostModal({ post }: { post: IPost }) {
 
   const handleEditorInit: IAllProps["onInit"] = (evt, editor) => {
     editorRef.current = editor;
+    if (post?.description) {
+      editor.setContent(post.description);
+    }
   };
 
   return (
@@ -131,14 +131,13 @@ export default function EditPostModal({ post }: { post: IPost }) {
                       placeholder="Enter your description"
                     />
 
-                    {/* Category selection */}
                     <div className="flex gap-5">
                       <Select
                         label="Category"
                         placeholder="Select Category"
-                        value={selectedCategory} // Bind to the selectedCategory state
+                        value={selectedCategory}
                         onChange={(value) => {
-                          setSelectedCategory(value as unknown as string);
+                          setSelectedCategory(value as string);
                           setValue("category", value); // Update form value
                         }}
                       >
@@ -148,7 +147,6 @@ export default function EditPostModal({ post }: { post: IPost }) {
                       </Select>
                     </div>
 
-                    {/* Image upload */}
                     <label
                       className="flex h-14 w-full cursor-pointer items-center justify-center rounded-xl border-2 border-default-200 text-default-500 shadow-sm transition-all duration-100 hover:border-default-400 mt-2"
                       htmlFor="image"
@@ -159,10 +157,9 @@ export default function EditPostModal({ post }: { post: IPost }) {
                       className="hidden"
                       id="image"
                       type="file"
-                      onChange={(e) => handleImageChange(e)}
+                      onChange={handleImageChange}
                     />
 
-                    {/* Image preview */}
                     {imagePreviews.length > 0 && (
                       <div className="flex gap-5 my-5 flex-wrap">
                         {imagePreviews.map((imageDataUrl) => (
@@ -180,10 +177,8 @@ export default function EditPostModal({ post }: { post: IPost }) {
                       </div>
                     )}
 
-                    {/* TinyMCE Editor for Description */}
                     <div className="h-full">
                       <label>Description</label>
-
                       <Editor
                         apiKey="kt1assz7z4seywy42wxjnla1vh604njk9iz95k31qd3o7tky"
                         init={{
@@ -217,12 +212,12 @@ export default function EditPostModal({ post }: { post: IPost }) {
                           content_style:
                             "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                         }}
+                        onEditorChange={(newContent) => setContent(newContent)}
                         onInit={handleEditorInit}
                       />
                     </div>
                   </div>
 
-                  {/* Premium Content Checkbox */}
                   <Checkbox
                     isDisabled={!user?.isPremiumMember}
                     {...register("isPremium")}

@@ -1,6 +1,5 @@
 "use server";
 import axios from "axios";
-import { revalidateTag } from "next/cache";
 import { FieldValues } from "react-hook-form";
 
 export const createPost = async (postData: FieldValues) => {
@@ -9,8 +8,6 @@ export const createPost = async (postData: FieldValues) => {
       "https://a6-tech-tips-server.vercel.app/api/posts",
       postData,
     );
-
-    revalidateTag("ALL_POSTS");
 
     return data;
   } catch (err: any) {

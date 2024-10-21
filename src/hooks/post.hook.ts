@@ -19,11 +19,11 @@ export const useCreatePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation<any, Error, FieldValues>({
-    mutationKey: ["ALL_POSTS"],
+    mutationKey: ["POSTS"],
     mutationFn: async (postData) => await createPost(postData),
     onSuccess: () => {
       toast.success("Post created successfully", { position: "top-center" });
-      queryClient.invalidateQueries({ queryKey: ["ALL_POSTS"] });
+      queryClient.invalidateQueries({ queryKey: ["POSTS"], exact: false });
     },
     onError: (error) => {
       error;
@@ -35,11 +35,11 @@ export const useEditPost = () => {
   const queryClient = useQueryClient();
 
   return useMutation<any, Error, FieldValues>({
-    mutationKey: ["ALL_POSTS"],
+    mutationKey: ["POSTS"],
     mutationFn: async (postData) => await editPost(postData),
     onSuccess: () => {
       toast.success("Post Edited successfully", { position: "top-center" });
-      queryClient.invalidateQueries({ queryKey: ["POSTS"] });
+      queryClient.invalidateQueries({ queryKey: ["POSTS"], exact: false });
     },
     onError: (error) => {
       error;
@@ -51,11 +51,11 @@ export const useDeletePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation<any, Error, string>({
-    mutationKey: ["ALL_POSTS"],
+    mutationKey: ["POSTS"],
     mutationFn: async (id) => await deletePost(id),
     onSuccess: () => {
       toast.success("Post Deleted successfully", { position: "top-center" });
-      queryClient.invalidateQueries({ queryKey: ["POSTS"] });
+      queryClient.invalidateQueries({ queryKey: ["POSTS"], exact: false });
     },
     onError: (error) => {
       error;

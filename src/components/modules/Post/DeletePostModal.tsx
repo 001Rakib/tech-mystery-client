@@ -59,7 +59,7 @@ const DeletePostModal = ({ id }: { id: string }) => {
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="flat" onPress={onClose}>
-                  Cancel
+                  Close
                 </Button>
               </ModalFooter>
             </>

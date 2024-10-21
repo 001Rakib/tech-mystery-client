@@ -12,12 +12,14 @@ import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 import { useChangePassword } from "@/src/hooks/auth.hook";
+import { useUser } from "@/src/context/user.provider";
 
 const ChangePasswordModal = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [errorMsg, setErrorMsg] = useState("");
   const { register, handleSubmit, reset } = useForm();
   const { mutate: changePassword, isPending } = useChangePassword();
+  const { user } = useUser();
 
   const handleChangePassword: SubmitHandler<FieldValues> = (data) => {
     if (data.newPassword !== data.newPassword2) {
@@ -29,6 +31,7 @@ const ChangePasswordModal = () => {
     const passChangeData = {
       oldPassword: data.oldPassword,
       newPassword: data.newPassword,
+      id: user?._id,
     };
 
     changePassword(passChangeData);

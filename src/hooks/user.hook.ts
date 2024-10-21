@@ -96,11 +96,14 @@ export const useFollowUser = () => {
   });
 };
 export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<any, Error, string>({
     mutationKey: ["USER"],
     mutationFn: async (id) => await deleteUser(id),
     onSuccess: () => {
       toast.success("User deleted successfully", { position: "top-center" });
+      queryClient.invalidateQueries({ queryKey: ["USER"] });
     },
     onError: (error) => {
       toast.error(error.message, { position: "top-center" });

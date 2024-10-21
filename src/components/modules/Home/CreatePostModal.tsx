@@ -20,6 +20,7 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { Checkbox } from "@nextui-org/checkbox";
 import { Editor, IAllProps } from "@tinymce/tinymce-react";
 import { Image } from "@nextui-org/image";
+import { toast } from "sonner";
 
 import { uploadImage } from "@/src/utils/uploadImage";
 import { useCreatePost } from "@/src/hooks/post.hook";
@@ -38,7 +39,8 @@ export default function CreatePostModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { user } = useUser();
   const { mutate: createPost, isPending } = useCreatePost();
-  const [content, setContent] = useState("");
+  // const [content, setContent] = useState("");
+  const [isEditorReady, setIsEditorReady] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
   const editorRef = useRef<EditorInstance | null>(null);
@@ -46,26 +48,41 @@ export default function CreatePostModal() {
   // Function to handle TinyMCE content update
   const handleEditorInit: IAllProps["onInit"] = (evt, editor) => {
     editorRef.current = editor;
+    setIsEditorReady(true);
   };
 
   const handleCreatePost: SubmitHandler<FieldValues> = async (data) => {
+    if (!isEditorReady || !editorRef.current) {
+      toast.error("Something went wrong, please try again");
+
+      return;
+    }
+
     const imageUrl =
       imageFiles.length > 0 ? await uploadImage(imageFiles[0]) : null;
 
-    if (editorRef.current) {
-      setContent(editorRef.current.getContent());
-    }
+    const editorContent = editorRef.current.getContent(); // Safely get content as editor is ready
 
+    if (!editorContent) {
+      toast.error("Something went wrong please try again", {
+        position: "top-center",
+      });
+
+      return;
+    }
     const postData = {
       ...data,
-      description: content,
+      description: editorContent,
       images: imageUrl?.data?.url || "",
       author: user?._id,
+      isPremium: data?.isPremium || false,
     };
 
     await createPost(postData);
     reset();
-    setContent(""); // Clear content after submission
+    setImageFiles([]);
+    setImagePreviews([]);
+    onOpenChange(false);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,9 +158,9 @@ export default function CreatePostModal() {
                   Upload Photo
                 </label>
                 <input
-                  required
                   className="hidden"
                   id="image"
+                  name="image"
                   type="file"
                   onChange={handleImageChange}
                 />
@@ -217,7 +234,7 @@ export default function CreatePostModal() {
                 <Button color="danger" variant="flat" onPress={onClose}>
                   Discard Post
                 </Button>
-                <Button color="primary" type="submit" onPress={onClose}>
+                <Button color="primary" type="submit">
                   Post
                 </Button>
               </ModalFooter>
